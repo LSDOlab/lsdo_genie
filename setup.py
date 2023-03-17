@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='lsdo_project_template',
+    name='lsdo_genie',
     version='0.1',
     packages=find_packages(),
     install_requires=[
@@ -12,11 +12,10 @@ setup(
         'sphinx-autoapi',
         'numpydoc',
         'gitpython',
-        # 'sphinx-collections',
-        'sphinxcontrib-collections @ git+https://github.com/anugrahjo/sphinx-collections.git'
-#         'scipy',
-#         'pint',
-#         'sphinx-code-include',
-#         'jupyter-sphinx',
+        'sphinx-collections',
+        'scipy',
+        'pint',
+        'sphinx-code-include',
+        'jupyter-sphinx',
     ],
 )
