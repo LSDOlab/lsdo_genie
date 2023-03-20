@@ -120,7 +120,7 @@ class Genie2D(BSplineSurface):
                 'Max: ',np.max(error),'\n',
                 'RMS: ',np.sqrt(np.sum(error**2)/len(error)))
 
-    def visualize(self, phi_cps=None, res=500):
+    def visualize(self, phi_cps=None, res=300):
         if phi_cps is None:
             phi_cps = self.control_points[:,2]
         x = self.dimensions[0]
@@ -136,11 +136,11 @@ class Genie2D(BSplineSurface):
         xx = b.dot(self.control_points[:,0]).reshape(res,res)
         yy = b.dot(self.control_points[:,1]).reshape(res,res)
         phi = b.dot(phi_cps).reshape(res,res)
-        ax.contour(xx,yy,phi,levels=[-2,-1,0,1,2],colors=['red','orange','green','blue','purple'])
+        ax.contour(xx,yy,phi,levels=[-0.02*self.Bbox_diag,-0.01*self.Bbox_diag,0,0.01*self.Bbox_diag,0.02*self.Bbox_diag],colors=['red','orange','green','blue','purple'])
         ax.plot(self.surface_points[:,0],self.surface_points[:,1],'k.',label='surface points')
         ax.set_xlabel('x')
         ax.set_ylabel('y')
-        ax.set_title('Contour Plot')
+        ax.set_title('Contour Plot [0,+/-0.01,+/-0.02]')
         ax.legend(loc='upper right')
         ax.set_xticks([x[0],np.sum(x)/2,x[1]])
         ax.set_yticks([y[0],np.sum(y)/2,y[1]])
@@ -170,7 +170,7 @@ class Genie2D(BSplineSurface):
             lim = (y[0],y[1])
         ax.set_xlim(lim)
         ax.set_ylim(lim)
-        ax.set_zlim(-5,5)
+        ax.set_zlim(phi_cps.min(),phi_cps.max())
 
 
         k=10
@@ -184,13 +184,13 @@ class Genie2D(BSplineSurface):
         xy = basis.dot(self.control_points[:,0:2])
         sdf = explicit_lsf(xy,dataset,self.surface_normals,k,rho)
         ax.plot(diag, phi, '-', color='C1', label='X-axis')
-        ax.plot(diag, sdf, '--', color='C1')
+        ax.plot(diag, sdf, '--', color='C1', label='exact')
         basis = self.get_basis_matrix(0.5*ones, diag, 0, 0)
         phi = basis.dot(phi_cps)
         xy = basis.dot(self.control_points[:,0:2])
         sdf = explicit_lsf(xy,dataset,self.surface_normals,k,rho)
         ax.plot(diag, phi, '-', color='C2', label='Y-axis')
-        ax.plot(diag, sdf, '--', color='C2')
+        ax.plot(diag, sdf, '--', color='C2', label='exact')
         # ax.axis([0,1,-8,8])
         ax.set_xticks([0,0.5,1])
         ax.set_yticks([-5,0,5])
@@ -240,16 +240,17 @@ class Genie2D(BSplineSurface):
 
     def compute_phi(self,pts):
         u,v = self.spatial_to_parametric(pts)
-
+        if (u.min()<0) or (v.min()<0):
+            raise ValueError(f"Points are below the bounds of the Bspline: {u.min()},{v.min()}")
+        if (u.max()>1) or (v.max()>1):
+            raise ValueError(f"Points are above the bounds of the Bspline: {u.max()},{v.max()}")
         b = self.get_basis_matrix(u,v,0,0)
         return b.dot(self.control_points[:,2])
     
     def gradient_phi(self,pts):
-        dxy = np.diff(self.dimensions).flatten()
-        scaling = 1/dxy
         u,v = self.spatial_to_parametric(pts)
         bdx = self.get_basis_matrix(u,v,1,0)
-        dpdx = bdx.dot(self.control_points[:,2])*scaling[0]
+        dpdx = bdx.dot(self.control_points[:,2])*self.scaling[0]
         bdy = self.get_basis_matrix(u,v,0,1)
-        dpdy = bdy.dot(self.control_points[:,2])*scaling[1]
+        dpdy = bdy.dot(self.control_points[:,2])*self.scaling[1]
         return dpdx, dpdy

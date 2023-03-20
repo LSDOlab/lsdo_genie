@@ -40,7 +40,7 @@ genie.solve_energy_minimization(...)
 genie.visualize()
 ```
 
-To use your constructed GeNIe constraint functio in optimization, simply save the GeNIe object and reload it your optimization problem. Evaluate the constraint function and its gradient by
+To use your constructed GeNIe constraint function in optimization, simply save the GeNIe object and reload it your optimization problem. Evaluate the constraint function and its gradient by
 ```python
 phi = genie.compute_phi(points)
 dx,dy = genie.gradient_phi(points)

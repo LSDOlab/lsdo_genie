@@ -178,6 +178,10 @@ class Genie3D(BSplineVolume):
 
     def compute_phi(self,pts):
         u,v,w = self.spatial_to_parametric(pts)
+        if (u.min()<0) or (v.min()<0) or (w.min()<0):
+            raise ValueError(f"A point lies below the bounds of the Bspline: {u.min()},{v.min()},{w.min()}")
+        if (u.max()>1) or (v.max()>1) or (w.max()>1):
+            raise ValueError(f"A point lies above the bounds of the Bspline: {u.max()},{v.max()},{w.max()}")
         b = self.get_basis_matrix(u,v,w,0,0,0)
         return b.dot(self.control_points[:,3])
     
@@ -239,19 +243,19 @@ class Genie3D(BSplineVolume):
         xyz = basis.dot(self.control_points[:,0:3])
         sdf = explicit_lsf(xyz,self.KDTree_dataset,self.surface_normals,k,rho)
         ax.plot(diag, phi, '-', color='C1', label='X-axis')
-        ax.plot(diag, sdf, '--', color='C1')
+        ax.plot(diag, sdf, '--', color='C1', label='exact')
         basis = self.get_basis_matrix(0.5*ones, diag, 0.5*ones, 0, 0, 0)
         phi = basis.dot(phi_cps)
         xyz = basis.dot(self.control_points[:,0:3])
         sdf = explicit_lsf(xyz,self.KDTree_dataset,self.surface_normals,k,rho)
         ax.plot(diag, phi, '-', color='C2', label='Y-axis')
-        ax.plot(diag, sdf, '--', color='C2')
+        ax.plot(diag, sdf, '--', color='C2', label='exact')
         basis = self.get_basis_matrix(0.5*ones, 0.5*ones, diag, 0, 0, 0)
         phi = basis.dot(phi_cps)
         xyz = basis.dot(self.control_points[:,0:3])
         sdf = explicit_lsf(xyz,self.KDTree_dataset,self.surface_normals,k,rho)
         ax.plot(diag, phi, '-', color='C3', label='Z-axis')
-        ax.plot(diag, sdf, '--', color='C3')
+        ax.plot(diag, sdf, '--', color='C3', label='exact')
         # ax.axis([0,1,phi_cps.min(),phi_cps.max()])
         ax.set_xticks([0,0.5,1])
         ax.set_yticks([phi_cps.min(),0,phi_cps.max()])
