@@ -47,9 +47,9 @@ class Genie2D(BSplineSurface):
         for i,ratio in enumerate(frac):
             if ratio < min_ratio:
                 ratio = min_ratio
-            # num_cps[i] = int(frac[i]*max_control_points)
+            num_cps[i] = int(frac[i]*max_control_points)
             # num_cps[i] = int((frac[i]*max_cps)+order-1)
-            num_cps[i] = 3*int((ratio*max_control_points)/3)
+            # num_cps[i] = 3*int((ratio*max_control_points)/3)
         self.num_cps = num_cps
         self.num_cps_pts  = int(np.product(self.num_cps))
 
@@ -136,11 +136,11 @@ class Genie2D(BSplineSurface):
         xx = b.dot(self.control_points[:,0]).reshape(res,res)
         yy = b.dot(self.control_points[:,1]).reshape(res,res)
         phi = b.dot(phi_cps).reshape(res,res)
-        ax.contour(xx,yy,phi,levels=[-0.02*self.Bbox_diag,-0.01*self.Bbox_diag,0,0.01*self.Bbox_diag,0.02*self.Bbox_diag],colors=['red','orange','green','blue','purple'])
+        ax.contour(xx,yy,phi,levels=[-0.05*self.Bbox_diag,-0.02*self.Bbox_diag,0,0.02*self.Bbox_diag,0.05*self.Bbox_diag],colors=['red','orange','green','blue','purple'])
         ax.plot(self.surface_points[:,0],self.surface_points[:,1],'k.',label='surface points')
         ax.set_xlabel('x')
         ax.set_ylabel('y')
-        ax.set_title('Contour Plot [0,+/-0.01,+/-0.02]')
+        ax.set_title(f'Contour Plot [0,+/-0.02,+/-0.05] {self.Bbox_diag}')
         ax.legend(loc='upper right')
         ax.set_xticks([x[0],np.sum(x)/2,x[1]])
         ax.set_yticks([y[0],np.sum(y)/2,y[1]])

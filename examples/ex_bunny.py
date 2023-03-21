@@ -13,6 +13,7 @@ genie.input_point_cloud(
 genie.config(
     dimensions=custom_dimensions,
     max_control_points=28,
+    min_ratio=0.75,
 )
 genie.solve_energy_minimization(
     Lp=1e0,

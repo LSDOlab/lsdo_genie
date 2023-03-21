@@ -54,9 +54,9 @@ class Genie3D(BSplineVolume):
         for i,ratio in enumerate(frac):
             if ratio < min_ratio:
                 ratio = min_ratio
-            # num_cps[i] = int(frac[i]*max_control_points)
+            num_cps[i] = int(frac[i]*max_control_points)
             # num_cps[i] = int((frac[i]*max_cps)+order-1)
-            num_cps[i] = 3*int((ratio*max_control_points)/3)
+            # num_cps[i] = 3*int((ratio*max_control_points)/3)
         self.num_cps = num_cps
         self.num_cps_pts  = int(np.product(self.num_cps))
 
