@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib.patches import FancyArrowPatch
 
-class Ellipsoid(object):
+class Ellipsoid:
 
     def __init__(self,a,b,c):
         self.a = a
@@ -20,7 +20,7 @@ class Ellipsoid(object):
         return np.stack((x.flatten(),y.flatten(),z.flatten()),axis=1)
 
     def unit_normals(self,num_pts):
-        pts = self.points(num_pts)
+        pts = self.surface_points(num_pts)
         dx = 2*pts[:,0]/self.a
         dy = 2*pts[:,1]/self.b
         dz = 2*pts[:,2]/self.c
@@ -40,8 +40,8 @@ if __name__ == '__main__':
 
     e = Ellipsoid(a,b,c)
 
-    pts = e.points(num_pts)
-    normals = e.unit_pt_normals(num_pts)
+    pts = e.surface_points(num_pts)
+    normals = e.unit_normals(num_pts)
 
     num_pts = len(pts)
 

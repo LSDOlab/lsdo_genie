@@ -1,6 +1,6 @@
 import numpy as np
 
-class Multi_circle(object):
+class Multi_circle:
     
     def __init__(self,centers,radii):
         self.center = []
@@ -40,8 +40,8 @@ if __name__ == '__main__':
 
     m = Multi_circle(centers,radii)
 
-    surf_pts = m.points(8)
-    normals = m.unit_pt_normals(8)
+    surf_pts = m.surface_points(8)
+    normals = m.unit_normals(8)
 
     sns.set()
     plt.plot(surf_pts[:,0],surf_pts[:,1],'b.',markersize=20,label='points')
@@ -51,7 +51,7 @@ if __name__ == '__main__':
         else:
             plt.arrow(i_pt[0],i_pt[1],i_norm[0],i_norm[1],color='k')
 
-    exact = m.points(1000)
+    exact = m.surface_points(1000)
     plt.plot(exact[:,0],exact[:,1],'k.',markersize=1,label='exact')
 
     plt.legend(loc='upper right')

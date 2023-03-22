@@ -1,14 +1,17 @@
 import numpy as np
 
-class Rectangle(object):
+class Rectangle:
     
-    def __init__(self,w,h):
+    def __init__(self,w,h,rotation=0):
         self.h = h
         self.w = w
         self.range = 2*w + 2*h
         self.b1 = w
         self.b2 = w+h
         self.b3 = 2*w+h
+        theta = np.deg2rad(rotation)
+        c, s = np.cos(theta), np.sin(theta)
+        self.rotmat = np.array(((c, -s), (s, c)))
 
     def surface_points(self,num_pts):
         theta = np.linspace(0,self.range,2*(num_pts)+1)[1::2]
@@ -26,7 +29,7 @@ class Rectangle(object):
             elif t<=self.range:
                 pts[i,0] = -self.w/2
                 pts[i,1] = (self.range-t-self.h/2)
-        return pts
+        return pts @ self.rotmat
 
     def unit_normals(self,num_pts):
         theta = np.linspace(0,self.range,2*(num_pts)+1)[1::2]
@@ -48,7 +51,7 @@ class Rectangle(object):
                 norm_vec[i] = np.array([-1,1])/np.sqrt(2)
             elif t>self.b3 and t<self.range:
                 norm_vec[i] = np.array([-1,0])
-        return norm_vec
+        return norm_vec @ self.rotmat
 
 
 if __name__ == '__main__':
@@ -61,20 +64,20 @@ if __name__ == '__main__':
     h = 7
     num_pts = 78
 
-    r = Rectangle(w,h)
+    r = Rectangle(w,h,rotation=45)
     
-    pts = r.points(num_pts)
+    pts = r.surface_points(num_pts)
     plt.plot(pts[:,0],pts[:,1],'k.',label='points')
 
-    pts = r.points(num_pts)
-    normals = r.unit_pt_normals(num_pts)
+    pts = r.surface_points(num_pts)
+    normals = r.unit_normals(num_pts)
     for i in range(num_pts):
         if i == 0:
             plt.arrow(pts[i,0],pts[i,1],normals[i,0],normals[i,1],color='k',label='normals')
         else:
             plt.arrow(pts[i,0],pts[i,1],normals[i,0],normals[i,1],color='k')
 
-    exact = r.points(1000)
+    exact = r.surface_points(1000)
     plt.plot(exact[:,0],exact[:,1],'b-',label='exact')
 
     plt.legend(loc='upper right')

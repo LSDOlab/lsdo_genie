@@ -1,6 +1,6 @@
 import numpy as np
 
-class Ellipse(object):
+class Ellipse:
     
     def __init__(self,a,b):
         self.a = a

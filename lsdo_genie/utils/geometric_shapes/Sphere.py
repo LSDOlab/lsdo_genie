@@ -1,7 +1,7 @@
 import numpy as np
 from numpy import newaxis as na
 
-class Sphere(object):
+class Sphere:
 
     def __init__(self,radius):
         self.radius = radius
@@ -24,7 +24,7 @@ class Sphere(object):
         return points
     
     def unit_normals(self,num_pts):
-        pts = self.points(num_pts)
+        pts = self.surface_points(num_pts)
         normals = pts / np.linalg.norm(pts,axis=1)[:,na]
         return normals
 
@@ -38,8 +38,8 @@ if __name__ == '__main__':
 
     e = Sphere(radius)
 
-    pts = e.points(num_pts)
-    normals = e.unit_pt_normals(num_pts)
+    pts = e.surface_points(num_pts)
+    normals = e.unit_normals(num_pts)
     print(pts)
     print(normals)
 
