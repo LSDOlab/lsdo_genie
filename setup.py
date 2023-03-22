@@ -44,6 +44,9 @@ for name_list in list_of_pyx_names:
         build_dir='build',
     )
 
+# Remove duplicates
+packages = list(set(packages))
+
 setup(
     name='lsdo_genie',
     ext_modules=ext_modules,
