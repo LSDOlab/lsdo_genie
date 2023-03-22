@@ -1,5 +1,5 @@
-from lsdo_genie.core.Bsplines.Bspline_Surface import BSplineSurface
-from lsdo_genie.core.Bsplines.knot_vectors import standard_uniform_knot_vector
+from lsdo_genie.core.bsplines.Bspline_Surface import BSplineSurface
+from lsdo_genie.core.bsplines.knot_vectors import standard_uniform_knot_vector
 from lsdo_genie.utils.Hicken_Kaur import explicit_lsf
 from scipy.spatial import KDTree
 import matplotlib.pyplot as plt

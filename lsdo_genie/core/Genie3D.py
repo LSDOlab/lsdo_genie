@@ -1,5 +1,5 @@
-from lsdo_genie.core.Bsplines.knot_vectors import standard_uniform_knot_vector
-from lsdo_genie.core.Bsplines.Bspline_Volume import BSplineVolume
+from lsdo_genie.core.bsplines.knot_vectors import standard_uniform_knot_vector
+from lsdo_genie.core.bsplines.Bspline_Volume import BSplineVolume
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from lsdo_genie.utils.Hicken_Kaur import explicit_lsf
 from skimage.measure import marching_cubes
