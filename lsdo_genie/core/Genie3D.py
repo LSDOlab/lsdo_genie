@@ -114,9 +114,15 @@ class Genie3D(BSplineVolume):
         A += Lr/self.num_hess_pts * Ar
 
         b  = Ln/self.num_surface_points * (nx@Ax + ny@Ay + nz@Az)
+
+        t1 = time.perf_counter()
         phi_QP, info = sps.linalg.cg(A,-b.flatten())
-        print('conjugate gradient solver info: ',info,'\n')
+        timetosolve = time.perf_counter() - t1
+
+        print('conjugate gradient solver info: ',info)
+        print(f'time to solve: {timetosolve:.3f}',' sec\n')
         self.control_points[:,3] = phi_QP
+
         self.compute_errors()
         return
 

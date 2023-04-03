@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import scipy.sparse as sps
 import seaborn as sns
 import numpy as np
+import time
 
 class Genie2D(BSplineSurface):
     def __init__(self):
@@ -27,7 +28,7 @@ class Genie2D(BSplineSurface):
         # Printing
         print('Minimum bbox: \n',self.min_bbox)
         print('Minimum bbox diagonal: ',self.Bbox_diag)
-        print('num_surf_pts: ', self.num_surf_pts,'\n')
+        print('num_surface_points: ', self.num_surf_pts,'\n')
     
     def config(self, dimensions:np.ndarray, max_control_points:int, order:int=4, min_ratio:float=0.5):
         self.order = order
@@ -100,8 +101,12 @@ class Genie2D(BSplineSurface):
         A += Lr/self.num_hess_pts * Ar
 
         b  = Ln/self.num_surf_pts * (nx@Ax + ny@Ay)
+
+        t1 = time.perf_counter()
         phi_QP, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,2])
-        print('conjugate gradient solver info: ',info,'\n')
+        timetosolve = time.perf_counter() - t1
+        print('conjugate gradient solver info: ',info)
+        print(f'time to solve: {timetosolve:.3f}',' sec\n')
         self.control_points[:,2] = phi_QP
 
         self.compute_errors()
