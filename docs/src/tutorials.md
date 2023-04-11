@@ -14,8 +14,11 @@ If no classification of tutorials is required, just remove the subpages for tuto
 and add the tutorial files directly into the toctree of this main tutorials page.
 
 ```{toctree}
-:maxdepth: 1
-:hidden:
+:maxdepth: 2
+:caption: List of tutorials
+:titlesonly:
+:numbered: 1
+:includehidden:
 
 tutorials/basic
 tutorials/advanced

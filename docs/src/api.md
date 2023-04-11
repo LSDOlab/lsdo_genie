@@ -1,10 +1,9 @@
-# API Ref
+# API reference 
 This section contains auto-generated API reference for the package.
 
-<!-- ```{toctree}
+```{toctree}
 :maxdepth: 1
-:hidden:
 
-../../api/vector
-../../api/matrix
-``` -->
+autoapi/vector/index
+autoapi/matrix/index
+```

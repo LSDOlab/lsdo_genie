@@ -9,9 +9,10 @@ import numpy as np
 import time
 
 class Genie2D(BSplineSurface):
-    def __init__(self):
-        self.u = {}
-        self.v = {}
+    def __init__(self, verbose=False):
+        self.u = dict()
+        self.v = dict()
+        self.verbose = verbose
 
     def input_point_cloud(self, surface_points:np.ndarray=None, surface_normals:np.ndarray=None):
         self.surface_points = surface_points
@@ -25,22 +26,23 @@ class Genie2D(BSplineSurface):
         diff = upper-lower
         self.min_bbox = np.stack((lower, upper),axis=1)
         self.Bbox_diag = np.linalg.norm(diff)
-        # Printing
-        print('Minimum bbox: \n',self.min_bbox)
-        print('Minimum bbox diagonal: ',self.Bbox_diag)
-        print('num_surface_points: ', self.num_surf_pts,'\n')
+        if self.verbose:
+            # Printing
+            print('Minimum bbox: \n',self.min_bbox)
+            print('Minimum bbox diagonal: ',self.Bbox_diag)
+            print('num_surface_points: ', self.num_surf_pts,'\n')
     
-    def config(self, dimensions:np.ndarray, max_control_points:int, order:int=4, min_ratio:float=0.5):
+    def config(self, domain:np.ndarray, max_control_points:int, order:int=4, min_ratio:float=0.5):
         self.order = order
-        if (self.surface_points[:,0] < dimensions[0,0]).any() \
-            or (self.surface_points[:,0] > dimensions[0,1]).any() \
-            or (self.surface_points[:,1] < dimensions[1,0]).any() \
-            or (self.surface_points[:,1] > dimensions[1,1]).any():
-            raise ValueError("surface points lie outside of the defined dimensions")
-        self.dimensions = dimensions
+        if (self.surface_points[:,0] < domain[0,0]).any() \
+            or (self.surface_points[:,0] > domain[0,1]).any() \
+            or (self.surface_points[:,1] < domain[1,0]).any() \
+            or (self.surface_points[:,1] > domain[1,1]).any():
+            raise ValueError("surface points lie outside of the defined domain")
+        self.domain = domain
 
         # Bounding box properties
-        dxy = np.diff(dimensions).flatten()
+        dxy = np.diff(domain).flatten()
         self.scaling = 1/dxy
         # Number of control points in each direction
         frac = dxy / np.max(dxy)
@@ -48,8 +50,8 @@ class Genie2D(BSplineSurface):
         for i,ratio in enumerate(frac):
             if ratio < min_ratio:
                 ratio = min_ratio
-            num_cps[i] = int(frac[i]*max_control_points)
-            # num_cps[i] = int((frac[i]*max_cps)+order-1)
+            num_cps[i] = int(ratio*max_control_points)
+            # num_cps[i] = int((ratio*max_cps)+order-1)
             # num_cps[i] = 3*int((ratio*max_control_points)/3)
         self.num_cps = num_cps
         self.num_cps_pts  = int(np.product(self.num_cps))
@@ -73,13 +75,14 @@ class Genie2D(BSplineSurface):
         self.u['hess'], self.v['hess'] = temp_u[mask].flatten(), temp_v[mask].flatten()
         self.num_hess_pts = int(len(self.u['hess']))
 
-        # Printing
-        print('Bspline box: \n',self.dimensions)
-        print('Control point grid: ', self.num_cps, '=', self.num_cps_pts)
-        print('Number of quadrature points: ', self.num_hess_pts)
-        print('Initial min distance: ',np.min(self.control_points[:,2]))
-        print('Initial max distance: ',np.max(self.control_points[:,2]))
-        print('Bspline order: ',self.order,'\n')
+        if self.verbose:
+            # Printing
+            print('Bspline box: \n',self.domain)
+            print('Control point grid: ', self.num_cps, '=', self.num_cps_pts)
+            print('Number of quadrature points: ', self.num_hess_pts)
+            print('Initial min distance: ',np.min(self.control_points[:,2]))
+            print('Initial max distance: ',np.max(self.control_points[:,2]))
+            print('Bspline order: ',self.order,'\n')
 
     def solve_energy_minimization(self, Lp=1., Ln=1., Lr=1e-3):
         A0  = self.get_basis(loc='surf',du=0,dv=0)
@@ -104,12 +107,15 @@ class Genie2D(BSplineSurface):
 
         t1 = time.perf_counter()
         phi_QP, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,2])
-        timetosolve = time.perf_counter() - t1
-        print('conjugate gradient solver info: ',info)
-        print(f'time to solve: {timetosolve:.3f}',' sec\n')
+        self.timetosolve = time.perf_counter() - t1
+
+        if self.verbose:
+            print('conjugate gradient solver info: ',info)
+            print(f'time to solve: {self.timetosolve:.3f}',' sec\n')
         self.control_points[:,2] = phi_QP
 
-        self.compute_errors()
+        if self.verbose:
+            self.compute_errors()
         return
 
     def compute_errors(self):
@@ -128,8 +134,8 @@ class Genie2D(BSplineSurface):
     def visualize(self, phi_cps=None, res=300):
         if phi_cps is None:
             phi_cps = self.control_points[:,2]
-        x = self.dimensions[0]
-        y = self.dimensions[1]
+        x = self.domain[0]
+        y = self.domain[1]
         dataset = KDTree(self.surface_points)
 
         sns.set()
@@ -209,12 +215,12 @@ class Genie2D(BSplineSurface):
     def spatial_to_parametric(self,pts):
         param = np.empty((2,len(pts)))
         for i in range(2):
-            param[i] = (pts[:,i] - self.dimensions[i,0]) / np.diff(self.dimensions[i,:])[0]
+            param[i] = (pts[:,i] - self.domain[i,0]) / np.diff(self.domain[i,:])[0]
         return param[0], param[1]
 
     def initialize_control_points(self,k=6,rho=10):
-        rangex = self.dimensions[0]
-        rangey = self.dimensions[1]
+        rangex = self.domain[0]
+        rangey = self.domain[1]
         # Order 4, index 1.0: basis = [1/6, 4/6, 1/6]
         # Order 5, index 1.5: basis = [1/24, 11/24, 11/24, 1/24]
         # Order 6, index 2.0: basis = [1/120, 26/120, 66/120, 26/120, 1/120]

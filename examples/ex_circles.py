@@ -11,18 +11,18 @@ e = Multi_circle(centers,radii)
 surface_points = e.surface_points(num_surface_pts)
 surface_normals = e.unit_normals(num_surface_pts)
 
-custom_dimensions = np.array([
+custom_domain = np.array([
     [-18.,18.],
     [-8.,8.]
 ])
 
-genie = Genie2D()
+genie = Genie2D(verbose=True)
 genie.input_point_cloud(
     surface_points=surface_points,
     surface_normals=surface_normals,
 )
 genie.config(
-    dimensions=custom_dimensions,
+    domain=custom_domain,
     max_control_points=30,
     min_ratio=0.75,
 )

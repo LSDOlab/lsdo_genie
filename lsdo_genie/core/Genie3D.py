@@ -11,10 +11,11 @@ import numpy as np
 import time
 
 class Genie3D(BSplineVolume):
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.u = dict()
         self.v = dict()
         self.w = dict()
+        self.verbose = verbose
 
     def input_point_cloud(self, surface_points:np.ndarray=None, surface_normals:np.ndarray=None):
         self.surface_points = surface_points
@@ -29,24 +30,25 @@ class Genie3D(BSplineVolume):
         diff = upper-lower
         self.min_bbox = np.stack((lower, upper),axis=1)
         self.Bbox_diag = np.linalg.norm(diff)
-        # Printing
-        print('Minimum bbox: \n',self.min_bbox)
-        print('Minimum bbox diagonal: ',self.Bbox_diag)
-        print('num_surface_points: ', self.num_surface_points,'\n')
+        if self.verbose:
+            # Printing
+            print('Minimum bbox: \n',self.min_bbox)
+            print('Minimum bbox diagonal: ',self.Bbox_diag)
+            print('num_surface_points: ', self.num_surface_points,'\n')
     
-    def config(self, dimensions:np.ndarray, max_control_points:int, order:int=4, min_ratio:float=0.5):
+    def config(self, domain:np.ndarray, max_control_points:int, order:int=4, min_ratio:float=0.5):
         self.order = order
-        if (self.surface_points[:,0] < dimensions[0,0]).any() \
-            or (self.surface_points[:,0] > dimensions[0,1]).any() \
-            or (self.surface_points[:,1] < dimensions[1,0]).any() \
-            or (self.surface_points[:,1] > dimensions[1,1]).any() \
-            or (self.surface_points[:,2] < dimensions[2,0]).any() \
-            or (self.surface_points[:,2] > dimensions[2,1]).any():
-            raise ValueError("surface points lie outside of the defined dimensions")
-        self.dimensions = dimensions
+        if (self.surface_points[:,0] < domain[0,0]).any() \
+            or (self.surface_points[:,0] > domain[0,1]).any() \
+            or (self.surface_points[:,1] < domain[1,0]).any() \
+            or (self.surface_points[:,1] > domain[1,1]).any() \
+            or (self.surface_points[:,2] < domain[2,0]).any() \
+            or (self.surface_points[:,2] > domain[2,1]).any():
+            raise ValueError("surface points lie outside of the defined domain")
+        self.domain = domain
 
         # Bounding box properties
-        dxyz = np.diff(dimensions).flatten()
+        dxyz = np.diff(domain).flatten()
         self.scaling = 1/dxyz
         # Number of control points in each direction
         frac = dxyz / np.max(dxyz)
@@ -54,8 +56,8 @@ class Genie3D(BSplineVolume):
         for i,ratio in enumerate(frac):
             if ratio < min_ratio:
                 ratio = min_ratio
-            num_cps[i] = int(frac[i]*max_control_points)
-            # num_cps[i] = int((frac[i]*max_cps)+order-1)
+            num_cps[i] = int(ratio*max_control_points)
+            # num_cps[i] = int((ratio*max_cps)+order-1)
             # num_cps[i] = 3*int((ratio*max_control_points)/3)
         self.num_cps = num_cps
         self.num_cps_pts  = int(np.product(self.num_cps))
@@ -81,13 +83,14 @@ class Genie3D(BSplineVolume):
         self.u['hess'], self.v['hess'], self.w['hess'] = temp_u[mask].flatten(), temp_v[mask].flatten(), temp_w[mask].flatten()
         self.num_hess_pts = int(len(self.u['hess']))
 
-        # Printing
-        print('Bspline box: \n',self.dimensions)
-        print('Control point grid: ', self.num_cps, '=', self.num_cps_pts)
-        print('Number of quadrature points: ', self.num_hess_pts)
-        print('Initial min distance: ',np.min(self.control_points[:,3]))
-        print('Initial max distance: ',np.max(self.control_points[:,3]))
-        print('Bspline order: ',self.order,'\n')
+        if self.verbose:
+            # Printing
+            print('Bspline box: \n',self.domain)
+            print('Control point grid: ', self.num_cps, '=', self.num_cps_pts)
+            print('Number of quadrature points: ', self.num_hess_pts)
+            print('Initial min distance: ',np.min(self.control_points[:,3]))
+            print('Initial max distance: ',np.max(self.control_points[:,3]))
+            print('Bspline order: ',self.order,'\n')
 
     def solve_energy_minimization(self, Lp=1., Ln=1., Lr=1e-3):
         A0  = self.get_basis(loc='surf',du=0,dv=0,dw=0)
@@ -117,13 +120,15 @@ class Genie3D(BSplineVolume):
 
         t1 = time.perf_counter()
         phi_QP, info = sps.linalg.cg(A,-b.flatten())
-        timetosolve = time.perf_counter() - t1
+        self.timetosolve = time.perf_counter() - t1
 
-        print('conjugate gradient solver info: ',info)
-        print(f'time to solve: {timetosolve:.3f}',' sec\n')
+        if self.verbose:
+            print('conjugate gradient solver info: ',info)
+            print(f'time to solve: {self.timetosolve:.3f}',' sec\n')
         self.control_points[:,3] = phi_QP
 
-        self.compute_errors()
+        if self.verbose:
+            self.compute_errors()
         return
 
     def compute_errors(self):
@@ -142,13 +147,13 @@ class Genie3D(BSplineVolume):
     def spatial_to_parametric(self,pts):
         param = np.empty((3,len(pts)))
         for i in range(3):
-            param[i] = (pts[:,i] - self.dimensions[i,0]) / np.diff(self.dimensions[i,:])[0]
+            param[i] = (pts[:,i] - self.domain[i,0]) / np.diff(self.domain[i,:])[0]
         return param[0], param[1], param[2]
 
     def initialize_control_points(self,k=10,rho=10):
-        rangex = self.dimensions[0]
-        rangey = self.dimensions[1]
-        rangez = self.dimensions[2]
+        rangex = self.domain[0]
+        rangey = self.domain[1]
+        rangez = self.domain[2]
         # Order 3, index 0.5: basis = [1/2, 1/2]
         # Order 4, index 1.0: basis = [1/6, 4/6, 1/6]
         # Order 5, index 1.5: basis = [1/24, 11/24, 11/24, 1/24]
@@ -205,9 +210,9 @@ class Genie3D(BSplineVolume):
         if phi_cps is None:
             phi_cps = self.control_points[:,3]
         gold = (198/255, 146/255, 20/255)
-        x = self.dimensions[0]
-        y = self.dimensions[1]
-        z = self.dimensions[2]
+        x = self.domain[0]
+        y = self.domain[1]
+        z = self.domain[2]
 
         sns.set()
         plt.figure()
@@ -218,7 +223,7 @@ class Genie3D(BSplineVolume):
         basis = self.get_basis_matrix(u, v, w, 0, 0, 0)
         phi = basis.dot(phi_cps).reshape((res,res,res))
         verts, faces,_,_ = marching_cubes(phi, 0)
-        verts = verts*np.diff(self.dimensions).flatten()/(res-1) + self.dimensions[:,0]
+        verts = verts*np.diff(self.domain).flatten()/(res-1) + self.domain[:,0]
         level_set = Poly3DCollection(verts[faces],linewidth=0.25,alpha=1,facecolor=gold,edgecolor='k')
         ax.add_collection3d(level_set)
         # ax.plot(self.surface_points[:,0],self.surface_points[:,1],self.surface_points[:,2],
@@ -230,8 +235,8 @@ class Genie3D(BSplineVolume):
         ax.set_xticks([x[0],(x[1]+x[0])/2,x[1]])
         ax.set_yticks([y[0],(y[1]+y[0])/2,y[1]])
         ax.set_zticks([z[0],(z[1]+z[0])/2,z[1]])
-        center = np.mean(self.dimensions,axis=1)
-        d = np.max(np.diff(self.dimensions,axis=1))
+        center = np.mean(self.domain,axis=1)
+        d = np.max(np.diff(self.domain,axis=1))
         ax.set_xlim(center[0]-d/2, center[0]+d/2)
         ax.set_ylim(center[1]-d/2, center[1]+d/2)
         ax.set_zlim(center[2]-d/2, center[2]+d/2)

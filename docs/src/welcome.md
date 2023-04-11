@@ -1,6 +1,6 @@
 # Welcome to lsdo_project_template
 
-![alt text](/images/lsdolab.png "Title displayed")
+![alt text](/src/images/lsdolab.png "Title displayed")
 
 This page describes conceptually the purpose of your package at a high-level.
 Start with a one sentence description of your package.
@@ -26,12 +26,11 @@ Include figures from the relevant paper and citation.
 :maxdepth: 1
 :hidden:
 
-getting_started
-background
-tutorials
-custom_1
-custom_2
-examples
-api
-autoapi/index
+src/getting_started
+src/background
+src/tutorials
+src/custom_1
+src/custom_2
+src/examples
+src/api
 ```
