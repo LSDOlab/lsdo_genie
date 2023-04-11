@@ -8,3 +8,9 @@ numpydoc
 gitpython
 git+https://github.com/anugrahjo/sphinx-collections.git
 cython
+packaging
+attrs
+tomli
+cikirana
+iniconfig
+pyparsing
