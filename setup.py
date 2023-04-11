@@ -42,6 +42,7 @@ for name_list in list_of_pyx_names:
         ),
         annotate=True,
         build_dir='build',
+        language_level="3",
     )
 
 # Remove duplicates
