@@ -16,7 +16,6 @@ genie.config(
     min_ratio=0.75,
 )
 genie.solve_energy_minimization(
-    Lp=1e0,
     Ln=1e0,
     Lr=1e-6,
 )
