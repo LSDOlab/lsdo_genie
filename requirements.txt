@@ -11,6 +11,5 @@ cython
 packaging
 attrs
 tomli
-cikirana
 iniconfig
 pyparsing
