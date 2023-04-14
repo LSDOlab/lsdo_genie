@@ -16,9 +16,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'lsdo_project_template'
-copyright = '2023, Anugrah'
-author = 'Anugrah'
+project = 'lsdo_genie'
+copyright = '2023, Ryan'
+author = 'Ryan'
 version = '0.1'
 # release = 0.1.0rtc
 
@@ -50,7 +50,7 @@ nb_execution_mode = 'off'
 # autodoc_typehints = 'description'
 
 # autoapi options
-autoapi_dirs = ["../lsdo_project_template/core"]
+autoapi_dirs = ["../lsdo_genie/core"]
 autoapi_root = 'src/autoapi'
 autoapi_type = 'python'
 autoapi_file_patterns = ['*.py', '*.pyi']
@@ -190,16 +190,16 @@ collections = {
     # convert_examples collection converts all .py files to .md files recursively inside `_temp/examples` 
     # directory and also extracts the docstrings from the .py files to generate title and descriptions
     # for those examples
-   'convert_examples': {
-      'driver': 'writer_function',  # uses custom WriterFunctionDriver written by Anugrah
-      'from'  : '_temp/examples/',  # source relative to path of makefile, not wrt /src
-      'source': py2md,              # custom function written above in `conf.py`
-      'target': 'examples/',        # target was a file for original FunctionDriver, e.g., 'target': 'examples/temp.txt'
-                                    # the original FunctionDriver was supposed to write only 1 file.
-      'clean': True,       
-      'final_clean': True,      
-    #   'write_result': True,   # this prevents original FunctionDriver from writing to the target file
-   },
+#    'convert_examples': {
+#       'driver': 'writer_function',  # uses custom WriterFunctionDriver written by Anugrah
+#       'from'  : '_temp/examples/',  # source relative to path of makefile, not wrt /src
+#       'source': py2md,              # custom function written above in `conf.py`
+#       'target': 'examples/',        # target was a file for original FunctionDriver, e.g., 'target': 'examples/temp.txt'
+#                                     # the original FunctionDriver was supposed to write only 1 file.
+#       'clean': True,       
+#       'final_clean': True,      
+#     #   'write_result': True,   # this prevents original FunctionDriver from writing to the target file
+#    },
 }
 
 collections_target = 'src/_temp'    # default : '_collections', the default storage location for all collections

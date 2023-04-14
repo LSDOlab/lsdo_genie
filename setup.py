@@ -56,6 +56,17 @@ setup(
     install_requires=[
         'numpy',
         'pytest',
+        'myst-nb',
+        'sphinx_rtd_theme',
+        'sphinx-copybutton',
+        'sphinx-autoapi',
+        'numpydoc',
+        'gitpython',
+        'sphinxcontrib-collections @ git+https://github.com/anugrahjo/sphinx-collections.git', # 'sphinx-collections',
+        'sphinxcontrib-bibtex',
+        'setuptools',
+        'wheel',
+        'twine',
         'cython',
     ],
 )

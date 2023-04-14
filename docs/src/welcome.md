@@ -31,6 +31,5 @@ src/background
 src/tutorials
 src/custom_1
 src/custom_2
-src/examples
 src/api
 ```
