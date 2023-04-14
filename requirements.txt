@@ -7,7 +7,7 @@ sphinx-autoapi
 numpydoc
 gitpython
 git+https://github.com/anugrahjo/sphinx-collections.git
-cython
+cython == 0.29.33
 packaging
 attrs
 tomli
