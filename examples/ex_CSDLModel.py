@@ -1,12 +1,12 @@
 from lsdo_genie import Genie3D
-from lsdo_genie.utils import Sphere
+from lsdo_genie.utils.geometric_shapes import Ellipsoid
 from lsdo_genie.utils import Genie3DCSDLModel
 import numpy as np
 import csdl
 from python_csdl_backend import Simulator
 
 num_pts = 100
-e = Sphere(5)
+e = Ellipsoid(5,5,5)
 surface_points = e.surface_points(num_pts)
 surface_normals = e.unit_normals(num_pts)
 x,y,z = surface_points[:,0],surface_points[:,1],surface_points[:,2]

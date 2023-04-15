@@ -1,5 +1,5 @@
 from lsdo_genie import Genie2D
-from lsdo_genie.utils import Multi_circle
+from lsdo_genie.utils.geometric_shapes import Multi_circle
 import numpy as np
 
 num_surface_pts = 25

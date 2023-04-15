@@ -1,5 +1,5 @@
 from lsdo_genie import Genie3D
-from lsdo_genie.utils import Ellipsoid
+from lsdo_genie.utils.geometric_shapes import Ellipsoid
 import numpy as np
 from lsdo_genie.utils import enlarged_bbox
 

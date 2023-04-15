@@ -1,5 +1,5 @@
 from lsdo_genie import Genie2D
-from lsdo_genie.utils import Rectangle
+from lsdo_genie.utils.geometric_shapes import Rectangle
 import numpy as np
 
 num_points = 76

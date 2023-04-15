@@ -4,8 +4,8 @@ import numpy as np
 '''
 Equations based on the explicit level set function derived by Hicken and Kaur which interpolate
 data points via piecewise linear signed distance functions defined by local hyperplanes.
-The function is defined by these piecewise functions with KS-aggregation, but is only continuous and
-nondifferentiable if only using the k-nearest neighbors.
+The function is defined by these piecewise functions with KS-aggregation, but is
+non-differentiable if only using the k-nearest neighbors.
 
 "An Explicit Level-Set Formula to Approximate Geometries"
 Jason E. Hicken and Sharanjeet Kaur

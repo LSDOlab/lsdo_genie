@@ -20,6 +20,6 @@ and add the tutorial files directly into the toctree of this main tutorials page
 :numbered: 1
 :includehidden:
 
-tutorials/basic
-tutorials/advanced
+tutorials/2D
+tutorials/3D
 ```

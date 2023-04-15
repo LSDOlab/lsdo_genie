@@ -1,7 +1,8 @@
 from lsdo_genie import Genie3D
 from lsdo_genie.utils import extract_stl_data, enlarged_bbox
+from lsdo_genie.utils.geometric_shapes import geometry_path
 
-surface_points, surface_normals = extract_stl_data('lsdo_genie/utils/geometric_shapes/Bunny.stl')
+surface_points, surface_normals = extract_stl_data(geometry_path+"Bunny.stl")
 
 custom_domain = enlarged_bbox(surface_points,percent=15)
 
