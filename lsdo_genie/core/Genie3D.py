@@ -35,7 +35,7 @@ class Genie3D(BSplineVolume):
             print('Minimum bbox: \n',self.min_bbox)
             print('Minimum bbox diagonal: ',self.Bbox_diag)
             print('num_surface_points: ', self.num_surface_points,'\n')
-    
+
     def config(self, domain:np.ndarray, max_control_points:int, order:int=4, min_ratio:float=0.5):
         self.order = order
         if (self.surface_points[:,0] < domain[0,0]).any() \
@@ -70,7 +70,7 @@ class Genie3D(BSplineVolume):
         kv_w = standard_uniform_knot_vector(num_cps[2], order)
         # Define Bspline Volume object
         super().__init__('Bspline',order,order,order,kv_u,kv_v,kv_w,num_cps)
-        
+
         # Surface points for data terms (Ep, En)
         self.u['surf'], self.v['surf'], self.w['surf'] = self.spatial_to_parametric(self.surface_points)
         # Quadrature points for regulation term (Er)
@@ -119,13 +119,16 @@ class Genie3D(BSplineVolume):
         b  = Ln/self.num_surface_points * (nx@Ax + ny@Ay + nz@Az)
 
         t1 = time.perf_counter()
-        phi_QP, info = sps.linalg.cg(A,-b.flatten())
+        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,3])
         self.timetosolve = time.perf_counter() - t1
+        if info != 0:
+            raise Exception(f"Conjugate gradient solver terminated with bad exit code: {info}")
 
         if self.verbose:
-            print('conjugate gradient solver info: ',info)
             print(f'time to solve: {self.timetosolve:.3f}',' sec\n')
-        self.control_points[:,3] = phi_QP
+            print('Final min distance: ',np.min(phi_solved))
+            print('Final max distance: ',np.max(phi_solved))
+        self.control_points[:,3] = phi_solved
 
         if self.verbose:
             self.compute_errors()
@@ -195,7 +198,7 @@ class Genie3D(BSplineVolume):
             raise ValueError(f"A point lies above the bounds of the Bspline: {u.max()},{v.max()},{w.max()}")
         b = self.get_basis_matrix(u,v,w,0,0,0)
         return b.dot(self.control_points[:,3])
-    
+
     def gradient_phi(self,pts):
         u,v,w = self.spatial_to_parametric(pts)
         bdx = self.get_basis_matrix(u,v,w,1,0,0)

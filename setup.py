@@ -51,7 +51,7 @@ packages = list(set(packages))
 setup(
     name='lsdo_genie',
     ext_modules=ext_modules,
-    version='0.1',
+    version='0.0.0',
     packages=packages,
     install_requires=[
         'numpy',
@@ -68,5 +68,9 @@ setup(
         'wheel',
         'twine',
         'cython',
+        'numpy-stl',
+        'matplotlib',
+        'seaborn',
+        'scipy',
     ],
 )

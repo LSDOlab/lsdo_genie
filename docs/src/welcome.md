@@ -1,23 +1,20 @@
-# Welcome to lsdo_project_template
+# Welcome to LSDO GeNIe
 
-![alt text](/src/images/lsdolab.png "Title displayed")
+![alt text](/src/images/lsdolab.png "LSDO Lab")
 
-This page describes conceptually the purpose of your package at a high-level.
-Start with a one sentence description of your package.
-For example, "This repository serves as a template for all LSDOlab projects with regard to documentation, testing and hosting of open-source code."
-Include figures from the relevant paper and citation.
+The LSDO Lab's Gemoetric Non-Interference (GeNIe) constraint formulation is an efficient and scalable method to enforce non-interference constraints in gradient-based optimization. We define geometric non-interference as a constraint to enforce such that the design body does not interfere with any other geometric shape in the environment. Non-interference constraints appear in layout optimization, optimal path planning optimization, and shape optimization problems.
 
-# Cite us
+![alt text](/src/images/arbitrarydiagram.png "Generic design optimization enforcing geometric non-interference")
+
+This package is more efficient formulation to the original energy minimization formulation presented in a previous paper. As an unconstrained quadratic programming problem, the solution to this formulation reduces to a solution to a sparse linear system; however, the original implementation was done using a BFGS approximation using a gradient-based optimizer. The original implementation, `lsdo_noninterference`, can be found [here](https://github.com/LSDOlab/lsdo_noninterference), but we recommend this package.
+
+
+# Cite the original work
+Pending review and revisions...
 ```none
-@article{lsdo2023,
-        Author = { Author 1, Author 2, and Author 3},
-        Journal = {Name of the Journal},
-        Title = {Title of your paper},
-        pages = {203},
-        year = {2023},
-        issn = {0123-4567},
-        doi = {https://doi.org/}
-        }
+"Scalable Enforcement of Geometric Non-interference Constraints for Gradient-Based Optimization"
+Ryan C. Dunn, Anugrah Jo Joshy, Jui-Te Lin, Cedric Girerd, Tania K. Morimoto, John T. Hwang 
+Springer Nature's Structural and Multidisciplinary Optimization Journal
 ```
 
 <!-- Remove/add custom pages from/to toc as per your package's requirement -->
@@ -28,8 +25,9 @@ Include figures from the relevant paper and citation.
 
 src/getting_started
 src/background
-src/tutorials
-src/custom_1
-src/custom_2
-src/api
 ```
+
+<!-- src/tutorials -->
+<!-- src/custom_1 -->
+<!-- src/custom_2 -->
+<!-- src/api -->

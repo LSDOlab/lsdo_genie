@@ -106,13 +106,16 @@ class Genie2D(BSplineSurface):
         b  = Ln/self.num_surf_pts * (nx@Ax + ny@Ay)
 
         t1 = time.perf_counter()
-        phi_QP, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,2])
+        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,2])
         self.timetosolve = time.perf_counter() - t1
+        if info != 0:
+            raise Exception(f"Conjugate gradient solver terminated with bad exit code: {info}")
 
         if self.verbose:
-            print('conjugate gradient solver info: ',info)
             print(f'time to solve: {self.timetosolve:.3f}',' sec\n')
-        self.control_points[:,2] = phi_QP
+            print('Final min distance: ',np.min(phi_solved))
+            print('Final max distance: ',np.max(phi_solved))
+        self.control_points[:,2] = phi_solved
 
         if self.verbose:
             self.compute_errors()
@@ -147,11 +150,11 @@ class Genie2D(BSplineSurface):
         xx = b.dot(self.control_points[:,0]).reshape(res,res)
         yy = b.dot(self.control_points[:,1]).reshape(res,res)
         phi = b.dot(phi_cps).reshape(res,res)
-        ax.contour(xx,yy,phi,levels=[-0.05*self.Bbox_diag,-0.02*self.Bbox_diag,0,0.02*self.Bbox_diag,0.05*self.Bbox_diag],colors=['red','orange','green','blue','purple'])
+        ax.contour(xx,yy,phi,levels=[-0.1*self.Bbox_diag,-0.05*self.Bbox_diag,0,0.05*self.Bbox_diag,0.1*self.Bbox_diag],colors=['red','orange','green','blue','purple'])
         ax.plot(self.surface_points[:,0],self.surface_points[:,1],'k.',label='surface points')
         ax.set_xlabel('x')
         ax.set_ylabel('y')
-        ax.set_title(f'Contour Plot [0,+/-0.02,+/-0.05] {self.Bbox_diag}')
+        ax.set_title(f'Isocontours [0,+/-0.05,+/-0.1] BBox Diagonal: {self.Bbox_diag:.3f}')
         ax.legend(loc='upper right')
         ax.set_xticks([x[0],np.sum(x)/2,x[1]])
         ax.set_yticks([y[0],np.sum(y)/2,y[1]])

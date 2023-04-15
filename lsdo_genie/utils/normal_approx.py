@@ -41,5 +41,4 @@ def edge_midpoints(vertices):
     normals = np.stack((-edges[:,1],edges[:,0]),axis=1) / np.linalg.norm(edges,axis=1)[:,None]
 
     midpoints = np.mean(np.stack((pts_i,pts_j),axis=2),axis=2)
-    print(np.shape(midpoints))
     return midpoints, normals

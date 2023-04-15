@@ -7,9 +7,10 @@ geom_shape = Rectangle(5,7)
 surface_points = geom_shape.surface_points(num_points)
 surface_normals = geom_shape.unit_normals(num_points)
 
-custom_domain = np.array(
-    [[-4.,4.],[-5.6,5.6]]
-)
+custom_domain = np.array([
+    [-4.0, 4.0],
+    [-5.6, 5.6],
+])
 
 genie = Genie2D(verbose=True)
 genie.input_point_cloud(

@@ -6,10 +6,10 @@ num_surface_pts = 25
 
 centers = [[-13.,-0.5],[-7.,2.],[2.,0.],[10.,-4.]]
 radii = [2.,2.,4.,3.]
-e = Multi_circle(centers,radii)
+geom_shape = Multi_circle(centers,radii)
 
-surface_points = e.surface_points(num_surface_pts)
-surface_normals = e.unit_normals(num_surface_pts)
+surface_points = geom_shape.surface_points(num_surface_pts)
+surface_normals = geom_shape.unit_normals(num_surface_pts)
 
 custom_domain = np.array([
     [-18.,18.],

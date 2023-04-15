@@ -1,6 +1,7 @@
 from lsdo_genie import Genie3D
 from lsdo_genie.utils import Ellipsoid
 import numpy as np
+from lsdo_genie.utils import enlarged_bbox
 
 num_pts = 100
 
@@ -9,13 +10,7 @@ e = Ellipsoid(5,5,5)
 surface_points = e.surface_points(num_pts)
 surface_normals = e.unit_normals(num_pts)
 
-x,y,z = surface_points[:,0],surface_points[:,1],surface_points[:,2]
-border = 5
-custom_domain = np.array([
-    [x.min()-border, x.max()+border],
-    [y.min()-border, y.max()+border],
-    [z.min()-border, z.max()+border],
-])
+custom_domain = enlarged_bbox(surface_points,percent=15)
 
 genie = Genie3D(verbose=True)
 genie.input_point_cloud(

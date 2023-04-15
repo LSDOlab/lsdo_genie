@@ -1,5 +1,5 @@
 # Getting started
-This page provides instructions for installing your package 
+This page provides instructions for installing `lsdo_genie` 
 and running a minimal example.
 
 ## Installation
@@ -7,26 +7,25 @@ and running a minimal example.
 ### Installation instructions for users
 For direct installation with all dependencies, run on the terminal or command line
 ```sh
-$ pip install git+https://github.com/LSDOlab/lsdo_project_template.git
+$ pip install git+https://github.com/LSDOlab/lsdo_genie.git
 ```
-If you want users to install a specific branch, run
-```sh
-$ pip install git+https://github.com/LSDOlab/lsdo_project_template.git@branch
-```
-
-**Enabled by**: Copying the `setup.py` file, changing your repository name and version, 
-and adding all your dependencies into the list `install_requires`.
 
 ### Installation instructions for developers
-To install `lsdo_project_template`, first clone the repository and install using pip.
+To install `lsdo_genie`, first clone the repository and install using pip.
 On the terminal or command line, run
 ```sh
-$ git clone https://github.com/LSDOlab/lsdo_project_template.git
-$ pip install -e ./lsdo_project_template
+$ git clone https://github.com/LSDOlab/lsdo_genie.git
+$ pip install -e ./lsdo_genie
 ```
-**Enabled by**: Copying the setup.py file, and changing your repository name and version.
 
-## Setting up Documentation
+## Minimal example
+```{toctree}
+:maxdepth: 0
+
+_temp/tutorials/minimal_tutorial
+```
+
+<!-- ## Setting up Documentation
 
 If you are not interested in using this repository as a template but only want to use the documentation template, 
 just copy the `/docs` directory and the `.readthedocs.yaml` file into your package root.
@@ -39,7 +38,7 @@ Customize/add/remove pages from the template according to your package's require
 
 For automatically generated API references, add docstrings to your modules, classes, functions, etc., and
 then edit the list of directories containing files with docstrings intended for automatic API generation. 
-This can be done by editing the line `autoapi_dirs = ["../../lsdo_project_template/core"]` 
+This can be done by editing the line `autoapi_dirs = ["../../lsdo_genie/core"]` 
 in `conf.py` in the `/src` directory.
 
 Add Python files for examples and Jupyter notebooks for tutorials into the main project repository. 
@@ -61,4 +60,4 @@ you will see your documentation online.
 The default website address will be generated based on your *Read the Docs* project name as `https://<proj_name>.readthedocs.io/`.
 You can also customize the URL on *Read the Docs*, if needed.
 
-## Setting up Testing
+## Setting up Testing -->

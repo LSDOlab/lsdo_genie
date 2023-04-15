@@ -24,38 +24,6 @@ vertex_normals = vertex_normal_approx(vertex_points)
 midpoints, midpt_normals = edge_midpoints(vertex_points)
 
 ### The rest of this file is plotting:
-
-plt.figure()
-plt.plot(vertex_points[:,0],vertex_points[:,1],'k.-', label="vertices")
-closure = np.roll(vertex_points,shift=1,axis=0)
-plt.plot(closure[:,0],closure[:,1],'k.-')
-show_label = True
-for (x,y),(nx,ny) in zip(vertex_points, vertex_normals):
-    if show_label:
-        plt.arrow(x, y, nx, ny, color='k', head_width=.2, label="vertex normals")
-        show_label = False
-    else: 
-        plt.arrow(x, y, nx, ny, color='k', head_width=.2)
-    
-plt.title("Vertex approximation")
-plt.legend()
-plt.axis('equal')
-
-plt.figure()
-plt.plot(midpoints[:,0],midpoints[:,1],'k.-', label="midpoints")
-closure = np.roll(midpoints,shift=1,axis=0)
-plt.plot(closure[:,0],closure[:,1],'k.-')
-show_label = True
-for (x,y),(nx,ny) in zip(midpoints, midpt_normals):
-    if show_label:
-        plt.arrow(x, y, nx, ny, color='k', head_width=.2, label="midpoint normals")
-        show_label = False
-    else: 
-        plt.arrow(x, y, nx, ny, color='k', head_width=.2)
-plt.title("Midpoints")
-plt.legend()
-plt.axis('equal')
-
 plt.figure()
 plt.plot(midpoints[:,0],midpoints[:,1],'r.-', label="midpoints")
 closure = np.roll(midpoints,shift=1,axis=0)
@@ -77,7 +45,7 @@ for (x,y),(nx,ny) in zip(vertex_points, vertex_normals):
         show_label = False
     else: 
         plt.arrow(x, y, nx, ny, color='k', head_width=.2)
-plt.title("Both overlayed")
+plt.title("Vertex and Midpoint Normal Approximations")
 plt.legend()
 plt.axis('equal')
 

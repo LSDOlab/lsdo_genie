@@ -9,7 +9,7 @@ However, outputs/visualization from running the script is excluded if you are us
 If no classification of examples is required, just remove the subpages for examples
 and add the example files directly into the toctree of this main examples page.
 
-```{toctree}
+<!-- ```{toctree}
 :maxdepth: 2
 :caption: List of examples
 :titlesonly:
@@ -18,4 +18,4 @@ and add the example files directly into the toctree of this main examples page.
 
 examples/basic
 examples/advanced
-```
+``` -->
