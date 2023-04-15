@@ -14,6 +14,9 @@ build:
     # nodejs: "19"
     # rust: "1.64"
     # golang: "1.19"
+  jobs:
+    pre_build:
+      - make clean
 
 # Build documentation in the docs/ directory with Sphinx
 # To specify the path to the conf.py file, relative to the root of the project,

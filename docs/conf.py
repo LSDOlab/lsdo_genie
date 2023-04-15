@@ -17,9 +17,9 @@
 # -- Project information -----------------------------------------------------
 
 project = 'lsdo_genie'
-copyright = '2023, Ryan'
-author = 'Ryan'
-version = '0.1'
+copyright = '2023, Ryan C. Dunn'
+author = 'Ryan C. Dunn'
+version = '0.0.0'
 # release = 0.1.0rtc
 
 
