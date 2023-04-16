@@ -1,3 +1,6 @@
+'''
+GeNIe in a CSDL model
+'''
 from lsdo_genie import Genie3D
 from lsdo_genie.utils.geometric_shapes import Ellipsoid
 from lsdo_genie.utils import Genie3DCSDLModel

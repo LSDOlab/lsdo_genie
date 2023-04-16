@@ -1,4 +1,4 @@
-from lsdo_genie.utils.normal_approx import vertex_normal_approx, edge_midpoints
+from lsdo_genie.utils.normal_approx import vertex_normal_approx, midpoint_normal_approx
 from lsdo_genie.utils.data_extractors import extract_stl_data
 from lsdo_genie.utils.bouding_boxes import enlarged_bbox
 from lsdo_genie.utils.Hicken_Kaur import explicit_lsf

@@ -4,6 +4,9 @@ import scipy.sparse as sps
 from lsdo_genie.core.bsplines.cython.basis_matrix_volume_py import get_basis_volume_matrix
 
 class BSplineVolume:
+    '''
+    Base class for Bspline Volumes
+    '''
     def __init__(self, name, order_u, order_v, order_w, knots_u, knots_v, knots_w, shape):
         self.name = name
         self.order_u = order_u

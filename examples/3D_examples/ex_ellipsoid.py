@@ -1,3 +1,6 @@
+'''
+3D Ellipsoid Problem
+'''
 from lsdo_genie import Genie3D
 from lsdo_genie.utils.geometric_shapes import Ellipsoid
 import numpy as np

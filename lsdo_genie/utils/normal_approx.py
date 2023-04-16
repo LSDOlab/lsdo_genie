@@ -21,7 +21,7 @@ def vertex_normal_approx(surf_pts):
     normals = normals/np.linalg.norm(normals,axis=1)[:,None]
     return normals
 
-def edge_midpoints(vertices):
+def midpoint_normal_approx(vertices):
     '''
     Approximate an arbitrary closed polygon by using the midpoints of the edges formed by an input set of vertices
     Normal direction is determined by the direction of the points given in the input:

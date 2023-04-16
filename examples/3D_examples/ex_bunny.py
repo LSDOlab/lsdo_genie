@@ -1,3 +1,6 @@
+'''
+3D Stanford Bunny Problem
+'''
 from lsdo_genie import Genie3D
 from lsdo_genie.utils import extract_stl_data, enlarged_bbox
 from lsdo_genie.utils.geometric_shapes import geometry_path

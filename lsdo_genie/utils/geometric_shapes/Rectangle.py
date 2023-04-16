@@ -14,7 +14,7 @@ class Rectangle:
         self.rotmat = np.array(((c, -s), (s, c)))
 
     def surface_points(self,num_pts):
-        theta = np.linspace(0,self.range,2*(num_pts)+1)[1::2]
+        theta = np.linspace(0, self.range, num_pts, endpoint=False)
         pts = np.zeros((len(theta),2))
         for i,t in enumerate(theta):
             if t<self.b1:
@@ -32,7 +32,7 @@ class Rectangle:
         return pts @ self.rotmat
 
     def unit_normals(self,num_pts):
-        theta = np.linspace(0,self.range,2*(num_pts)+1)[1::2]
+        theta = np.linspace(0, self.range, num_pts, endpoint=False)
         norm_vec = np.zeros((len(theta),2))
         for i,t in enumerate(theta):
             if t==0:

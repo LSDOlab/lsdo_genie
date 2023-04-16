@@ -22,4 +22,5 @@ and add the tutorial files directly into the toctree of this main tutorials page
 
 tutorials/2D
 tutorials/3D
+tutorials/geomutils
 ```

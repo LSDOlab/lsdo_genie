@@ -1,3 +1,6 @@
+'''
+2D Rectangle Problem
+'''
 from lsdo_genie import Genie2D
 from lsdo_genie.utils.geometric_shapes import Rectangle
 import numpy as np

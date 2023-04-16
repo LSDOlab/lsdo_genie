@@ -22,8 +22,3 @@ Implicit surface reconstruction by Calakli and Taubin {cite:p}`Calakli_and_Taubi
 Explicit formulation for the signed distance function by Hicken and Kaur {cite:p}`Hicken_and_Kaur`
 
 Previous methods {cite:p}`Risco_et_al,Brelje_et_al,Lin_et_al` scale with respect to the number of points sampled over the gemoetric shape.
-
-## Bibliography
-
-```{bibliography} ../references.bib
-```

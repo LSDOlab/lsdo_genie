@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def visualize_2Dptcloud(points, normals, show_normals=True):
+def visualize_2Dptcloud(points, normals, show_normals=True, title="Point cloud with normals"):
     sns.set_style('ticks')
     plt.figure()
     plt.plot(points[:,0],points[:,1],'k.', label="points")
@@ -14,13 +14,13 @@ def visualize_2Dptcloud(points, normals, show_normals=True):
                 show_label = False
             else: 
                 plt.arrow(x, y, nx, ny, color='b', head_width=.2)
-    plt.title("Point cloud with normals")
+    plt.title(title)
     plt.legend()
     plt.axis('equal')
     sns.despine()
     plt.show()
 
-def visualize_3Dptcloud(points, normals, show_normals=True):
+def visualize_3Dptcloud(points, normals, show_normals=True, title="Point cloud with normals"):
     sns.set_style('ticks')
     plt.figure()
     ax = plt.axes(projection='3d')
@@ -39,7 +39,7 @@ def visualize_3Dptcloud(points, normals, show_normals=True):
                 ypts = np.array([y,y+ny])
                 zpts = np.array([z,z+nz])
                 ax.plot(xpts,ypts,zpts, 'b-')
-    ax.set_title("Point cloud with normals")
+    ax.set_title(title)
     ax.legend()
     lower = np.min(points,axis=0)
     upper = np.max(points,axis=0)

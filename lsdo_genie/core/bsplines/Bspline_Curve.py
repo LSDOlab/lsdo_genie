@@ -4,6 +4,9 @@ import scipy.sparse as sps
 from lsdo_genie.core.bsplines.cython.basis_matrix_curve_py import get_basis_curve_matrix
 
 class BSplineCurve:
+    '''
+    Base class for Bspline Curves
+    '''
     def __init__(self, name, order_u, knots_u, shape):
         self.name = name
         self.order_u = order_u

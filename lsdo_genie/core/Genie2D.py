@@ -9,6 +9,9 @@ import numpy as np
 import time
 
 class Genie2D(BSplineSurface):
+    '''
+    Base class for 2D geometric shape representation
+    '''
     def __init__(self, verbose=False):
         self.u = dict()
         self.v = dict()
