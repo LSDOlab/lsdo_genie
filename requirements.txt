@@ -7,7 +7,7 @@ sphinx-autoapi
 numpydoc
 gitpython
 git+https://github.com/anugrahjo/sphinx-collections.git
-Cython == 0.29.27
+cython == 0.29.34
 matplotlib
 seaborn
 scipy
