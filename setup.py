@@ -67,10 +67,11 @@ setup(
         'setuptools',
         'wheel',
         'twine',
-        'cython',
+        'Cython',
         'numpy-stl',
         'matplotlib',
         'seaborn',
         'scipy',
+        'csdl',
     ],
 )
