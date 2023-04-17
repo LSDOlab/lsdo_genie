@@ -1,8 +1,8 @@
 from libc.stdlib cimport malloc, free
 
-from lsdo_genie.core.bsplines.cython.basis0 cimport get_basis0
-from lsdo_genie.core.bsplines.cython.basis1 cimport get_basis1
-from lsdo_genie.core.bsplines.cython.basis2 cimport get_basis2
+from lsdo_genie.bsplines.cython.basis0 cimport get_basis0
+from lsdo_genie.bsplines.cython.basis1 cimport get_basis1
+from lsdo_genie.bsplines.cython.basis2 cimport get_basis2
 
 ctypedef int (*get_basis_func)(int order, int num_control_points, double u, double* knot_vector, double* basis)
 

@@ -12,7 +12,7 @@ def explicit_lsf(pts,data_points:KDTree,data_normals,k,rho):
     Jason E. Hicken and Sharanjeet Kaur
     doi:10.2514/6.2022-1862
 
-    Inputs
+    Parameters
     ----------
     points : np.ndarray(N,d)
         Points to evaluate the level set funcion
@@ -25,7 +25,7 @@ def explicit_lsf(pts,data_points:KDTree,data_normals,k,rho):
     rho : float
         Smoothing parameter
 
-    Outputs
+    Returns
     ----------
     phi : np.ndarray(N,)
         Approximate signed distance value of the points

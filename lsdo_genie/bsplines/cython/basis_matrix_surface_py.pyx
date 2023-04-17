@@ -1,7 +1,7 @@
 import numpy as np
 cimport numpy as np
 
-from lsdo_genie.core.bsplines.cython.basis_matrix_surface cimport get_basis_surface_matrix
+from lsdo_genie.bsplines.cython.basis_matrix_surface cimport get_basis_surface_matrix
 
 
 def get_basis_surface_matrix(

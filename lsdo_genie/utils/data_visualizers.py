@@ -2,7 +2,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def visualize_2Dptcloud(points, normals, show_normals=True, title="Point cloud with normals"):
+def visualize_2Dptcloud(points:np.ndarray, normals:np.ndarray, show_normals:bool=True, title:str="2D Point cloud with normals"):
+    '''
+    Plots and shows a 2D point cloud with normal vectors
+
+    Parameters
+    ----------
+    points : np.ndarray(N,2)
+        The points in the poind cloud
+    normals : np.ndarray(N,2)
+        The normal vectors of the point cloud
+    show_normals : bool
+        Show the normal vectors with a blue arrow
+    title : str
+        Title of the plot
+    '''
     sns.set_style('ticks')
     plt.figure()
     plt.plot(points[:,0],points[:,1],'k.', label="points")
@@ -20,7 +34,21 @@ def visualize_2Dptcloud(points, normals, show_normals=True, title="Point cloud w
     sns.despine()
     plt.show()
 
-def visualize_3Dptcloud(points, normals, show_normals=True, title="Point cloud with normals"):
+def visualize_3Dptcloud(points:np.ndarray, normals:np.ndarray, show_normals:bool=True, title:str="3D Point cloud with normals"):
+    '''
+    Plots and shows a 3D point cloud with normal vectors
+
+    Parameters
+    ----------
+    points : np.ndarray(N,3)
+        The points in the poind cloud
+    normals : np.ndarray(N,3)
+        The normal vectors of the point cloud
+    show_normals : bool
+        Show the normal vectors with a blue arrow
+    title : str
+        Title of the plot
+    '''
     sns.set_style('ticks')
     plt.figure()
     ax = plt.axes(projection='3d')

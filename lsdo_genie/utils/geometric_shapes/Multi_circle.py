@@ -1,18 +1,24 @@
 import numpy as np
 
 class Multi_circle:
-    
+    '''
+    Multi_circle
+    '''
+
     def __init__(self,centers,radii):
+        '''
+        __init__
+        '''
         self.center = []
         self.radius = []
         for (c,r) in zip(centers,radii):
-            self.add_circle(c,r)
-
-    def add_circle(self,center,r):
-        self.center.append(center)
-        self.radius.append(r)
+            self.center.append(c)
+            self.radius.append(r)
 
     def surface_points(self,num_pts):
+        '''
+        surface_points
+        '''
         theta = np.linspace(0,2*np.pi,num_pts,endpoint=False)
         pts = np.empty((0,2))
         for (cent,r) in zip(self.center,self.radius):
@@ -22,6 +28,9 @@ class Multi_circle:
         return pts
 
     def unit_normals(self,num_pts):
+        '''
+        unit_normals
+        '''
         theta = np.linspace(0,2*np.pi,num_pts,endpoint=False)
         norms = np.empty((0,2))
         for i in range(len(self.radius)):
@@ -29,32 +38,3 @@ class Multi_circle:
             ny = np.sin(theta)
             norms = np.vstack((norms,np.stack((nx,ny),axis=1)))
         return norms
-
-
-if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-
-    centers = [[-13.,-0.5],[-7.,0.5],[2.,0.],[10.,-4.]]
-    radii = [2.,2.,4.,3.]
-
-    m = Multi_circle(centers,radii)
-
-    surf_pts = m.surface_points(8)
-    normals = m.unit_normals(8)
-
-    sns.set()
-    plt.plot(surf_pts[:,0],surf_pts[:,1],'b.',markersize=20,label='points')
-    for i,(i_pt,i_norm) in enumerate(zip(surf_pts,normals)):
-        if i == 0:
-            plt.arrow(i_pt[0],i_pt[1],i_norm[0],i_norm[1],color='k',label='normals')
-        else:
-            plt.arrow(i_pt[0],i_pt[1],i_norm[0],i_norm[1],color='k')
-
-    exact = m.surface_points(1000)
-    plt.plot(exact[:,0],exact[:,1],'k.',markersize=1,label='exact')
-
-    plt.legend(loc='upper right')
-    plt.title('Mutli-Circles')
-    plt.axis('equal')
-    plt.show()

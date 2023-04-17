@@ -13,7 +13,7 @@ e = Ellipsoid(5,5,5)
 surface_points = e.surface_points(num_pts)
 surface_normals = e.unit_normals(num_pts)
 
-custom_domain = enlarged_bbox(surface_points,percent=15)
+custom_domain = enlarged_bbox(surface_points,percent=15.)
 
 genie = Genie3D(verbose=True)
 genie.input_point_cloud(

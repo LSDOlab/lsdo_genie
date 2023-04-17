@@ -7,12 +7,12 @@ def vertex_normal_approx(surf_pts):
     Clockwise : normals point outwards
     Counter-Clockwise : normals point inwards
 
-    Inputs
+    Parameters
     ----------
     vertices : np.ndarray(num_pts,2)
         The input points
 
-    Outputs
+    Returns
     ----------
     normals : np.ndarray(num_pts,2)
         Approximate normal vectors at the input points
@@ -32,12 +32,12 @@ def midpoint_normal_approx(vertices):
     Clockwise : normals point outwards
     Counter-Clockwise : normals point inwards
 
-    Inputs
+    Parameters
     ----------
     vertices : np.ndarray(num_pts,2)
         The input points
 
-    Outputs
+    Returns
     ----------
     midpoints: np.ndarray(num_pts,2)
         Midpoints between input points

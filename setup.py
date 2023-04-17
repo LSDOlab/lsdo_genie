@@ -11,15 +11,15 @@ else:
     compile_args=['-std=c++17']
 
 list_of_pyx_names = [
-    ('core', 'bsplines', 'cython', 'basis0'),
-    ('core', 'bsplines', 'cython', 'basis1'),
-    ('core', 'bsplines', 'cython', 'basis2'),
-    ('core', 'bsplines', 'cython', 'basis_matrix_curve'),
-    ('core', 'bsplines', 'cython', 'basis_matrix_curve_py'),
-    ('core', 'bsplines', 'cython', 'basis_matrix_surface'),
-    ('core', 'bsplines', 'cython', 'basis_matrix_surface_py'),
-    ('core', 'bsplines', 'cython', 'basis_matrix_volume'),
-    ('core', 'bsplines', 'cython', 'basis_matrix_volume_py'),
+    ('bsplines', 'cython', 'basis0'),
+    ('bsplines', 'cython', 'basis1'),
+    ('bsplines', 'cython', 'basis2'),
+    ('bsplines', 'cython', 'basis_matrix_curve'),
+    ('bsplines', 'cython', 'basis_matrix_curve_py'),
+    ('bsplines', 'cython', 'basis_matrix_surface'),
+    ('bsplines', 'cython', 'basis_matrix_surface_py'),
+    ('bsplines', 'cython', 'basis_matrix_volume'),
+    ('bsplines', 'cython', 'basis_matrix_volume_py'),
 ]
 
 ext_modules = []

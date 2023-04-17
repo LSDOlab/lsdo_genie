@@ -1,5 +1,5 @@
-from lsdo_genie.core.bsplines.Bspline_Surface import BSplineSurface
-from lsdo_genie.core.bsplines.knot_vectors import standard_uniform_knot_vector
+from lsdo_genie.bsplines.BsplineSurface import BsplineSurface
+from lsdo_genie.bsplines.knot_vectors import standard_uniform_knot_vector
 from lsdo_genie.utils.Hicken_Kaur import explicit_lsf
 from scipy.spatial import KDTree
 import matplotlib.pyplot as plt
@@ -8,20 +8,17 @@ import seaborn as sns
 import numpy as np
 import time
 
-class Genie2D(BSplineSurface):
+class Genie2D(BsplineSurface):
     '''
-    Base class for 2D geometric shape representation
+    Base class for 2D geometric shape representation.
+    
+    Attributes
+    ----------
+    verbose : bool
+        Prints out information for troubleshooting
     '''
 
     def __init__(self, verbose=False):
-        '''
-        Initialize Genie2D instance
-
-        Inputs
-        ----------
-        verbose : bool
-            Prints out information for troubleshooting
-        '''
         self.u = dict()
         self.v = dict()
         self.verbose = verbose
@@ -30,7 +27,7 @@ class Genie2D(BSplineSurface):
         '''
         Input the point cloud data
 
-        Inputs
+        Parameters
         ----------
         surface_points : np.ndarray(N,2)
             Positional data of the points in a point cloud
@@ -58,7 +55,7 @@ class Genie2D(BSplineSurface):
         '''
         Set up the Bspline for non-interference constraints
 
-        Inputs
+        Parameters
         ----------
         domain : np.ndarray(2,2)
             Lower and upper bounds in each dimension for the domain of interest
@@ -124,7 +121,7 @@ class Genie2D(BSplineSurface):
         '''
         Solve the energy minimization problem
 
-        Inputs
+        Parameters
         ----------
         Lp : float
             Depricated weighting parameter for zero level set point energy term
@@ -188,7 +185,7 @@ class Genie2D(BSplineSurface):
         '''
         Visualize the isocontours, control points in 3D, and phi values along the x-y axes
 
-        Inputs
+        Parameters
         ----------
         res : int
             The resolution in each dimension to evaluate the function for visualization
@@ -275,12 +272,12 @@ class Genie2D(BSplineSurface):
         '''
         Convert (x,y) coordinates to (u,v) coordinates
 
-        Inputs
+        Parameters
         ----------
         pts : np.ndarray(N,2)
             The points to convert to parametric coordinates
         
-        Outputs
+        Returns
         ----------
         u : np.ndarray(N,)
             The 'u' parametric coordinates
@@ -296,14 +293,14 @@ class Genie2D(BSplineSurface):
         '''
         Initialize the control points using Hicken and Kaur's explicit method
 
-        Inputs
+        Parameters
         ----------
         k : int
             Numer of nearest neighbors to include in the function
         rho : float
             Smoothing parameter
 
-        Outputs
+        Returns
         ----------
         cps : np.ndarray(Ncp,3)
             The initial control points with (x,y,phi) values at each point 
@@ -338,7 +335,7 @@ class Genie2D(BSplineSurface):
         '''
         Convenience function for building the basis matrix for different points
 
-        Inputs
+        Parameters
         ----------
         loc : str
             'surf' for surface points or 'hess' for quadrature points to evaluate the hessian
@@ -347,9 +344,9 @@ class Genie2D(BSplineSurface):
         dv : int
             Derivative in the 'v' direction
         
-        Outputs
+        Returns
         ----------
-        basis : np.ndarray(N,Ncp)
+        basis : sps.csc_matrix(N,Ncp)
             The basis matrix that can be multiplied with the control points to get (N,) output values
         '''
         basis = self.get_basis_matrix(self.u[loc],self.v[loc],du,dv)
@@ -359,12 +356,12 @@ class Genie2D(BSplineSurface):
         '''
         Compute the phi value at a set of points
 
-        Inputs
+        Parameters
         ----------
         pts : np.ndarray(N,2)
             Set of points to be evaluated
         
-        Outputs
+        Returns
         ----------
         phi : np.ndarray(N,)
             The phi values at each input point
@@ -381,12 +378,12 @@ class Genie2D(BSplineSurface):
         '''
         Compute the phi value at a set of points
 
-        Inputs
+        Parameters
         ----------
         pts : np.ndarray(N,2)
             Set of points to be evaluated
 
-        Outputs
+        Returns
         ----------
         dpdx : np.ndarray(N,)
             The derivative of phi with respect to the x-coordinate

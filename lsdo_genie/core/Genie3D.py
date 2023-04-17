@@ -1,5 +1,5 @@
-from lsdo_genie.core.bsplines.knot_vectors import standard_uniform_knot_vector
-from lsdo_genie.core.bsplines.Bspline_Volume import BSplineVolume
+from lsdo_genie.bsplines.knot_vectors import standard_uniform_knot_vector
+from lsdo_genie.bsplines.BsplineVolume import BsplineVolume
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from lsdo_genie.utils.Hicken_Kaur import explicit_lsf
 from skimage.measure import marching_cubes
@@ -10,19 +10,19 @@ import seaborn as sns
 import numpy as np
 import time
 
-class Genie3D(BSplineVolume):
+class Genie3D(BsplineVolume):
     '''
     Base class for 3D geometric shape representation
+
+    Attributes
+    ----------
+    verbose : bool
+        Prints out information for troubleshooting
     '''
 
     def __init__(self, verbose=False):
         '''
         Initialize Genie2D instance
-
-        Inputs
-        ----------
-        verbose : bool
-            Prints out information for troubleshooting
         '''
         self.u = dict()
         self.v = dict()
@@ -33,7 +33,7 @@ class Genie3D(BSplineVolume):
         '''
         Input the point cloud data
 
-        Inputs
+        Parameters
         ----------
         surface_points : np.ndarray(N,3)
             Positional data of the points in a point cloud
@@ -62,7 +62,7 @@ class Genie3D(BSplineVolume):
         '''
         Set up the Bspline for non-interference constraints
 
-        Inputs
+        Parameters
         ----------
         domain : np.ndarray(3,2)
             Lower and upper bounds in each dimension for the domain of interest
@@ -132,7 +132,7 @@ class Genie3D(BSplineVolume):
         '''
         Solve the energy minimization problem
 
-        Inputs
+        Parameters
         ----------
         Lp : float
             Depricated weighting parameter for zero level set point energy term
@@ -202,12 +202,12 @@ class Genie3D(BSplineVolume):
         '''
         Convert (x,y,z) coordinates to (u,v,w) coordinates
 
-        Inputs
+        Parameters
         ----------
         pts : np.ndarray(N,3)
             The points to convert to parametric coordinates
         
-        Outputs
+        Returns
         ----------
         u : np.ndarray(N,)
             The 'u' parametric coordinates
@@ -225,14 +225,14 @@ class Genie3D(BSplineVolume):
         '''
         Initialize the control points using Hicken and Kaur's explicit method
 
-        Inputs
+        Parameters
         ----------
         k : int
             Numer of nearest neighbors to include in the function
         rho : float
             Smoothing parameter
 
-        Outputs
+        Returns
         ----------
         cps : np.ndarray(Ncp,4)
             The initial control points with (x,y,z,phi) values at each point 
@@ -273,7 +273,7 @@ class Genie3D(BSplineVolume):
         '''
         Convenience function for building the basis matrix for different points
 
-        Inputs
+        Parameters
         ----------
         loc : str
             'surf' for surface points or 'hess' for quadrature points to evaluate the hessian
@@ -284,9 +284,9 @@ class Genie3D(BSplineVolume):
         dw : int
             Derivative in the 'w' direction
         
-        Outputs
+        Returns
         ----------
-        basis : np.ndarray(N,Ncp)
+        basis : sps.csc_matrix(N,Ncp)
             The basis matrix that can be multiplied with the control points to get (N,) output values
         '''
         basis = self.get_basis_matrix(self.u[loc],self.v[loc],self.w[loc],du,dv,dw)
@@ -296,12 +296,12 @@ class Genie3D(BSplineVolume):
         '''
         Compute the phi value at a set of points
 
-        Inputs
+        Parameters
         ----------
         pts : np.ndarray(N,3)
             Set of points to be evaluated
         
-        Outputs
+        Returns
         ----------
         phi : np.ndarray(N,)
             The phi values at each input point
@@ -318,12 +318,12 @@ class Genie3D(BSplineVolume):
         '''
         Compute the phi value at a set of points
 
-        Inputs
+        Parameters
         ----------
         pts : np.ndarray(N,3)
             Set of points to be evaluated
 
-        Outputs
+        Returns
         ----------
         dpdx : np.ndarray(N,)
             The derivative of phi with respect to the x-coordinate
@@ -345,7 +345,7 @@ class Genie3D(BSplineVolume):
         '''
         Visualize the isocontours, control points in 3D, and phi values along the x-y axes
 
-        Inputs
+        Parameters
         ----------
         res : int
             The resolution in each dimension to evaluate the function for visualization

@@ -51,8 +51,9 @@ nb_execution_mode = 'off'
 
 # autoapi options
 autoapi_dirs = [
-   "../lsdo_genie/core", 
-   "../lsdo_genie/core/bsplines",
+   "../lsdo_genie/core",
+   "../lsdo_genie/bsplines",
+   "../lsdo_genie/utils",
 ]
 autoapi_root = 'src/autoapi'
 autoapi_type = 'python'

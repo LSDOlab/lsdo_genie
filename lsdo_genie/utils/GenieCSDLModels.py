@@ -6,7 +6,7 @@ class Genie2DCSDLModel(csdl.CustomExplicitOperation):
     Computational System Design Language (CSDL) interface for using `lsdo_genie` in gradient-based
     optimization for 2D geometric shapes
 
-    Inputs
+    Parameters
     ----------
     num_pts : int
         Number of points in the input
@@ -21,6 +21,9 @@ class Genie2DCSDLModel(csdl.CustomExplicitOperation):
     '''
 
     def initialize(self):
+        '''
+        initialize
+        '''
         self.parameters.declare("num_pts",  types=int)
         self.parameters.declare("x_name",   types=str)
         self.parameters.declare("y_name",   types=str)
@@ -28,6 +31,9 @@ class Genie2DCSDLModel(csdl.CustomExplicitOperation):
         self.parameters.declare("genie_object")
 
     def define(self):
+        '''
+        define
+        '''
         num_pts = self.parameters["num_pts"]
         x_name = self.parameters["x_name"]
         y_name = self.parameters["y_name"]
@@ -41,6 +47,9 @@ class Genie2DCSDLModel(csdl.CustomExplicitOperation):
         self.declare_derivatives(of=out_name,wrt=y_name,rows=np.arange(num_pts),cols=np.arange(num_pts))
 
     def compute(self, inputs, outputs):
+        '''
+        compute
+        '''
         x_name = self.parameters["x_name"]
         y_name = self.parameters["y_name"]
         out_name = self.parameters["out_name"]
@@ -50,6 +59,9 @@ class Genie2DCSDLModel(csdl.CustomExplicitOperation):
         outputs[out_name] = genie_obj.compute_phi(pts)
 
     def compute_derivatives(self, inputs, derivatives):
+        '''
+        compute_derivatives
+        '''
         x_name = self.parameters["x_name"]
         y_name = self.parameters["y_name"]
         out_name = self.parameters["out_name"]
@@ -67,7 +79,7 @@ class Genie3DCSDLModel(csdl.CustomExplicitOperation):
     Computational System Design Language (CSDL) interface for using `lsdo_genie` in gradient-based
     optimization for 3D geometric shapes
 
-    Inputs
+    Parameters
     ----------
     num_pts : int
         Number of points in the input
@@ -84,6 +96,9 @@ class Genie3DCSDLModel(csdl.CustomExplicitOperation):
     '''
 
     def initialize(self):
+        '''
+        initialize
+        '''
         self.parameters.declare("num_pts",  types=int)
         self.parameters.declare("x_name",   types=str)
         self.parameters.declare("y_name",   types=str)
@@ -92,6 +107,9 @@ class Genie3DCSDLModel(csdl.CustomExplicitOperation):
         self.parameters.declare("genie_object")
 
     def define(self):
+        '''
+        define
+        '''
         num_pts = self.parameters["num_pts"]
         x_name = self.parameters["x_name"]
         y_name = self.parameters["y_name"]
@@ -108,6 +126,9 @@ class Genie3DCSDLModel(csdl.CustomExplicitOperation):
         self.declare_derivatives(of=out_name,wrt=z_name,rows=np.arange(num_pts),cols=np.arange(num_pts))
 
     def compute(self, inputs, outputs):
+        '''
+        compute
+        '''
         x_name = self.parameters["x_name"]
         y_name = self.parameters["y_name"]
         z_name = self.parameters["z_name"]
@@ -118,6 +139,9 @@ class Genie3DCSDLModel(csdl.CustomExplicitOperation):
         outputs[out_name] = genie_obj.compute_phi(pts)
 
     def compute_derivatives(self, inputs, derivatives):
+        '''
+        compute_derivatives
+        '''
         x_name = self.parameters["x_name"]
         y_name = self.parameters["y_name"]
         z_name = self.parameters["z_name"]

@@ -1,8 +1,14 @@
 import numpy as np
 
 class Rectangle:
-    
+    '''
+    Rectangle
+    '''
+
     def __init__(self,w,h,rotation=0):
+        '''
+        __init__
+        '''
         self.h = h
         self.w = w
         self.range = 2*w + 2*h
@@ -14,6 +20,9 @@ class Rectangle:
         self.rotmat = np.array(((c, -s), (s, c)))
 
     def surface_points(self,num_pts):
+        '''
+        surface_points
+        '''
         theta = np.linspace(0, self.range, num_pts, endpoint=False)
         pts = np.zeros((len(theta),2))
         for i,t in enumerate(theta):
@@ -32,6 +41,9 @@ class Rectangle:
         return pts @ self.rotmat
 
     def unit_normals(self,num_pts):
+        '''
+        unit_normals
+        '''
         theta = np.linspace(0, self.range, num_pts, endpoint=False)
         norm_vec = np.zeros((len(theta),2))
         for i,t in enumerate(theta):
@@ -52,36 +64,3 @@ class Rectangle:
             elif t>self.b3 and t<self.range:
                 norm_vec[i] = np.array([-1,0])
         return norm_vec @ self.rotmat
-
-
-if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-
-    sns.set()
-
-    w = 5
-    h = 7
-    num_pts = 78
-
-    r = Rectangle(w,h,rotation=45)
-    
-    pts = r.surface_points(num_pts)
-    plt.plot(pts[:,0],pts[:,1],'k.',label='points')
-
-    pts = r.surface_points(num_pts)
-    normals = r.unit_normals(num_pts)
-    for i in range(num_pts):
-        if i == 0:
-            plt.arrow(pts[i,0],pts[i,1],normals[i,0],normals[i,1],color='k',label='normals')
-        else:
-            plt.arrow(pts[i,0],pts[i,1],normals[i,0],normals[i,1],color='k')
-
-    exact = r.surface_points(1000)
-    plt.plot(exact[:,0],exact[:,1],'b-',label='exact')
-
-    plt.legend(loc='upper right')
-    plt.title('Rectangle w={} h={}'.format(w,h))
-    plt.axis('equal')
-
-    plt.show()

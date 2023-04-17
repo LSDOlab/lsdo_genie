@@ -7,7 +7,7 @@ from lsdo_genie.utils.geometric_shapes import geometry_path
 
 surface_points, surface_normals = extract_stl_data(geometry_path+"Bunny.stl")
 
-custom_domain = enlarged_bbox(surface_points,percent=15)
+custom_domain = enlarged_bbox(surface_points,percent=15.)
 
 genie = Genie3D(verbose=True)
 genie.input_point_cloud(
