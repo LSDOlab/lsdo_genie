@@ -9,6 +9,7 @@ and an overview of the mathematical formulation of `lsdo_genie`.
 
 background/existingmethods
 background/formulation
+background/significance
 ```
 
 

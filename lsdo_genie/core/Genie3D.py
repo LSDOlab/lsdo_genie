@@ -173,7 +173,7 @@ class Genie3D(BsplineVolume):
             raise Exception(f"Conjugate gradient solver terminated with bad exit code: {info}")
 
         if self.verbose:
-            print(f'time to solve: {self.timetosolve:.3f}',' sec\n')
+            print(f'Time to solve: {self.timetosolve:1.3f}',' seconds\n')
             print('Final min distance: ',np.min(phi_solved))
             print('Final max distance: ',np.max(phi_solved))
         self.control_points[:,3] = phi_solved
@@ -189,14 +189,14 @@ class Genie3D(BsplineVolume):
         phi = self.compute_phi(self.surface_points)
         phi = phi/self.Bbox_diag
         print('Relative surface error: \n',
-                'Max: ',np.max(abs(phi)),'\n',
-                'RMS: ',np.sqrt(np.sum(phi**2)/len(phi)))
+                f'  Max: {np.max(abs(phi)):1.3e}\n',
+                f'  RMS: {np.sqrt(np.sum(phi**2)/len(phi)):1.3e}')
         dx,dy,dz = self.gradient_phi(self.surface_points)
         nx,ny,nz = self.surface_normals[:,0], self.surface_normals[:,1], self.surface_normals[:,2]
         error = ((dx+nx)**2 + (dy+ny)**2 + (dz+nz)**2)**(1/2)
         print('Gradient error: \n',
-                'Max: ',np.max(error),'\n',
-                'RMS: ',np.sqrt(np.sum(error**2)/len(error)))
+                f'  Max: {np.max(error):1.3e}','\n',
+                f'  RMS: {np.sqrt(np.sum(error**2)/len(error)):1.3e}')
 
     def spatial_to_parametric(self,pts:np.ndarray):
         '''
