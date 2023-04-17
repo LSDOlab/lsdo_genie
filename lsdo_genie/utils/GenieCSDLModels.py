@@ -2,6 +2,23 @@ import csdl
 import numpy as np
 
 class Genie2DCSDLModel(csdl.CustomExplicitOperation):
+    '''
+    Computational System Design Language (CSDL) interface for using `lsdo_genie` in gradient-based
+    optimization for 2D geometric shapes
+
+    Inputs
+    ----------
+    num_pts : int
+        Number of points in the input
+    x_name : str
+        CSDL variable name of the x-coordinate of the input points
+    y_name : str
+        CSDL variable name of the y-coordinate of the input points
+    out_name : str
+        CSDL variable name of the output phi
+    genie_object : lsdo_genie.Genie2D
+        The genie object to be used in the model to compute phi
+    '''
 
     def initialize(self):
         self.parameters.declare("num_pts",  types=int)
@@ -46,6 +63,25 @@ class Genie2DCSDLModel(csdl.CustomExplicitOperation):
 
 
 class Genie3DCSDLModel(csdl.CustomExplicitOperation):
+    '''
+    Computational System Design Language (CSDL) interface for using `lsdo_genie` in gradient-based
+    optimization for 3D geometric shapes
+
+    Inputs
+    ----------
+    num_pts : int
+        Number of points in the input
+    x_name : str
+        CSDL variable name of the x-coordinate of the input points
+    y_name : str
+        CSDL variable name of the y-coordinate of the input points
+    z_name : str
+        CSDL variable name of the z-coordinate of the input points
+    out_name : str
+        CSDL variable name of the output phi
+    genie_object : lsdo_genie.Genie2D
+        The genie object to be used in the model to compute phi
+    '''
 
     def initialize(self):
         self.parameters.declare("num_pts",  types=int)

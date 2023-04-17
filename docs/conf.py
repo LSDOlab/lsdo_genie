@@ -50,7 +50,10 @@ nb_execution_mode = 'off'
 # autodoc_typehints = 'description'
 
 # autoapi options
-autoapi_dirs = ["../lsdo_genie/core"]
+autoapi_dirs = [
+   "../lsdo_genie/core", 
+   "../lsdo_genie/core/bsplines",
+]
 autoapi_root = 'src/autoapi'
 autoapi_type = 'python'
 autoapi_file_patterns = ['*.py', '*.pyi']

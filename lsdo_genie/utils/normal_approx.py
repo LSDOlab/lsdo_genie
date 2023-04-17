@@ -7,11 +7,15 @@ def vertex_normal_approx(surf_pts):
     Clockwise : normals point outwards
     Counter-Clockwise : normals point inwards
 
-    inputs: 
-    surf_pts : np.ndarray shape=(num_pts,2)
+    Inputs
+    ----------
+    vertices : np.ndarray(num_pts,2)
+        The input points
 
-    output:
-    normals : np.ndarray shape=(num_pts,2)
+    Outputs
+    ----------
+    normals : np.ndarray(num_pts,2)
+        Approximate normal vectors at the input points
     '''
     edges_i = surf_pts - np.roll(surf_pts, shift=1, axis=0)
     normals_i = np.stack((-edges_i[:,1],edges_i[:,0]),axis=1) / np.linalg.norm(edges_i,axis=1)[:,None]
@@ -28,12 +32,17 @@ def midpoint_normal_approx(vertices):
     Clockwise : normals point outwards
     Counter-Clockwise : normals point inwards
 
-    inputs: 
-    vertices : np.ndarray shape=(num_pts,2)
+    Inputs
+    ----------
+    vertices : np.ndarray(num_pts,2)
+        The input points
 
-    output:
-    midpoints: np.ndarray shape=(num_pts,2)
-    normals : np.ndarray shape=(num_pts,2)
+    Outputs
+    ----------
+    midpoints: np.ndarray(num_pts,2)
+        Midpoints between input points
+    normals : np.ndarray(num_pts,2)
+        Normal vectors at the midpoints
     '''
     pts_i = vertices
     pts_j = np.roll(vertices, shift=1, axis=0)

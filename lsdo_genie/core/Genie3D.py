@@ -11,13 +11,35 @@ import numpy as np
 import time
 
 class Genie3D(BSplineVolume):
+    '''
+    Base class for 3D geometric shape representation
+    '''
+
     def __init__(self, verbose=False):
+        '''
+        Initialize Genie2D instance
+
+        Inputs
+        ----------
+        verbose : bool
+            Prints out information for troubleshooting
+        '''
         self.u = dict()
         self.v = dict()
         self.w = dict()
         self.verbose = verbose
 
     def input_point_cloud(self, surface_points:np.ndarray=None, surface_normals:np.ndarray=None):
+        '''
+        Input the point cloud data
+
+        Inputs
+        ----------
+        surface_points : np.ndarray(N,3)
+            Positional data of the points in a point cloud
+        surface_normals : np.ndarray(N,3)
+            Normal vectors of the points in a point cloud
+        '''
         self.surface_points = surface_points
         self.surface_normals = surface_normals
         self.KDTree_dataset = KDTree(surface_points)
@@ -37,6 +59,20 @@ class Genie3D(BSplineVolume):
             print('num_surface_points: ', self.num_surface_points,'\n')
 
     def config(self, domain:np.ndarray, max_control_points:int, order:int=4, min_ratio:float=0.5):
+        '''
+        Set up the Bspline for non-interference constraints
+
+        Inputs
+        ----------
+        domain : np.ndarray(3,2)
+            Lower and upper bounds in each dimension for the domain of interest
+        max_control_points : int
+            Maximum number of control points along the longest dimension
+        min_ratio : float
+            Minimum ratio from the shortest dimension to the longest dimension to maintain uniform control point spacing
+        order : int
+            Polynomial order of the Bspline        
+        '''
         self.order = order
         if (self.surface_points[:,0] < domain[0,0]).any() \
             or (self.surface_points[:,0] > domain[0,1]).any() \
@@ -92,7 +128,19 @@ class Genie3D(BSplineVolume):
             print('Initial max distance: ',np.max(self.control_points[:,3]))
             print('Bspline order: ',self.order,'\n')
 
-    def solve_energy_minimization(self, Lp=1., Ln=1., Lr=1e-3):
+    def solve_energy_minimization(self, Lp:float=1., Ln:float=1., Lr:float=1e-3):
+        '''
+        Solve the energy minimization problem
+
+        Inputs
+        ----------
+        Lp : float
+            Depricated weighting parameter for zero level set point energy term
+        Ln : float
+            Weighting parameter for the normal vectors energy term
+        Lr : float
+            Weighting parameter for the regularization energy term
+        '''
         A0  = self.get_basis(loc='surf',du=0,dv=0,dw=0)
         Ax  = self.scaling[0]*self.get_basis(loc='surf',du=1,dv=0,dw=0)
         Ay  = self.scaling[1]*self.get_basis(loc='surf',du=0,dv=1,dw=0)
@@ -135,6 +183,9 @@ class Genie3D(BSplineVolume):
         return
 
     def compute_errors(self):
+        '''
+        Compute error values and print to terminal
+        '''
         phi = self.compute_phi(self.surface_points)
         phi = phi/self.Bbox_diag
         print('Relative surface error: \n',
@@ -147,13 +198,45 @@ class Genie3D(BSplineVolume):
                 'Max: ',np.max(error),'\n',
                 'RMS: ',np.sqrt(np.sum(error**2)/len(error)))
 
-    def spatial_to_parametric(self,pts):
+    def spatial_to_parametric(self,pts:np.ndarray):
+        '''
+        Convert (x,y,z) coordinates to (u,v,w) coordinates
+
+        Inputs
+        ----------
+        pts : np.ndarray(N,3)
+            The points to convert to parametric coordinates
+        
+        Outputs
+        ----------
+        u : np.ndarray(N,)
+            The 'u' parametric coordinates
+        v : np.ndarray(N,)
+            The 'v' parametric coordinates
+        w : np.ndarray(N,)
+            The 'w' parametric coordinates
+        '''
         param = np.empty((3,len(pts)))
         for i in range(3):
             param[i] = (pts[:,i] - self.domain[i,0]) / np.diff(self.domain[i,:])[0]
         return param[0], param[1], param[2]
 
-    def initialize_control_points(self,k=10,rho=10):
+    def initialize_control_points(self,k:int=10,rho:float=10.):
+        '''
+        Initialize the control points using Hicken and Kaur's explicit method
+
+        Inputs
+        ----------
+        k : int
+            Numer of nearest neighbors to include in the function
+        rho : float
+            Smoothing parameter
+
+        Outputs
+        ----------
+        cps : np.ndarray(Ncp,4)
+            The initial control points with (x,y,z,phi) values at each point 
+        '''
         rangex = self.domain[0]
         rangey = self.domain[1]
         rangez = self.domain[2]
@@ -187,10 +270,42 @@ class Genie3D(BSplineVolume):
         return cps
 
     def get_basis(self,loc='surf',du=0,dv=0,dw=0):
+        '''
+        Convenience function for building the basis matrix for different points
+
+        Inputs
+        ----------
+        loc : str
+            'surf' for surface points or 'hess' for quadrature points to evaluate the hessian
+        du : int
+            Derivative in the 'u' direction
+        dv : int
+            Derivative in the 'v' direction
+        dw : int
+            Derivative in the 'w' direction
+        
+        Outputs
+        ----------
+        basis : np.ndarray(N,Ncp)
+            The basis matrix that can be multiplied with the control points to get (N,) output values
+        '''
         basis = self.get_basis_matrix(self.u[loc],self.v[loc],self.w[loc],du,dv,dw)
         return basis
 
     def compute_phi(self,pts):
+        '''
+        Compute the phi value at a set of points
+
+        Inputs
+        ----------
+        pts : np.ndarray(N,3)
+            Set of points to be evaluated
+        
+        Outputs
+        ----------
+        phi : np.ndarray(N,)
+            The phi values at each input point
+        '''
         u,v,w = self.spatial_to_parametric(pts)
         if (u.min()<0) or (v.min()<0) or (w.min()<0):
             raise ValueError(f"A point lies below the bounds of the Bspline: {u.min()},{v.min()},{w.min()}")
@@ -199,7 +314,24 @@ class Genie3D(BSplineVolume):
         b = self.get_basis_matrix(u,v,w,0,0,0)
         return b.dot(self.control_points[:,3])
 
-    def gradient_phi(self,pts):
+    def gradient_phi(self,pts:np.ndarray):
+        '''
+        Compute the phi value at a set of points
+
+        Inputs
+        ----------
+        pts : np.ndarray(N,3)
+            Set of points to be evaluated
+
+        Outputs
+        ----------
+        dpdx : np.ndarray(N,)
+            The derivative of phi with respect to the x-coordinate
+        dpdy : np.ndarray(N,)
+            The derivative of phi with respect to the y-coordinate
+        dpdz : np.ndarray(N,)
+            The derivative of phi with respect to the z-coordinate
+        '''
         u,v,w = self.spatial_to_parametric(pts)
         bdx = self.get_basis_matrix(u,v,w,1,0,0)
         dpdx = bdx.dot(self.control_points[:,3])*self.scaling[0]
@@ -210,6 +342,14 @@ class Genie3D(BSplineVolume):
         return dpdx, dpdy, dpdz
 
     def visualize(self, phi_cps=None, res=30):
+        '''
+        Visualize the isocontours, control points in 3D, and phi values along the x-y axes
+
+        Inputs
+        ----------
+        res : int
+            The resolution in each dimension to evaluate the function for visualization
+        '''
         if phi_cps is None:
             phi_cps = self.control_points[:,3]
         gold = (198/255, 146/255, 20/255)
