@@ -84,7 +84,7 @@ class Genie3D(BsplineVolume):
         self.domain = domain
 
         # Bounding box properties
-        dxyz = np.diff(domain).flatten()
+        dxyz = np.diff(domain).flatten()/self.Bbox_diag
         self.scaling = 1/dxyz
         # Number of control points in each direction
         frac = dxyz / np.max(dxyz)
@@ -128,7 +128,7 @@ class Genie3D(BsplineVolume):
             print('Initial max distance: ',np.max(self.control_points[:,3]))
             print('Bspline order: ',self.order,'\n')
 
-    def solve_energy_minimization(self, Lp:float=1., Ln:float=1., Lr:float=1e-3):
+    def solve_energy_minimization(self, Lp:float=1., Ln:float=1., Lr:float=1e-3, maxiter=None):
         '''
         Solve the energy minimization problem
 
@@ -167,8 +167,9 @@ class Genie3D(BsplineVolume):
         b  = Ln/self.num_surface_points * (nx@Ax + ny@Ay + nz@Az)
 
         t1 = time.perf_counter()
-        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,3])
+        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,3]/self.Bbox_diag,maxiter=maxiter)
         self.timetosolve = time.perf_counter() - t1
+        phi_solved = phi_solved*self.Bbox_diag
         if info != 0:
             raise Exception(f"Conjugate gradient solver terminated with bad exit code: {info}")
 
@@ -334,11 +335,11 @@ class Genie3D(BsplineVolume):
         '''
         u,v,w = self.spatial_to_parametric(pts)
         bdx = self.get_basis_matrix(u,v,w,1,0,0)
-        dpdx = bdx.dot(self.control_points[:,3])*self.scaling[0]
+        dpdx = bdx.dot(self.control_points[:,3])*self.scaling[0]/self.Bbox_diag
         bdy = self.get_basis_matrix(u,v,w,0,1,0)
-        dpdy = bdy.dot(self.control_points[:,3])*self.scaling[1]        
+        dpdy = bdy.dot(self.control_points[:,3])*self.scaling[1]/self.Bbox_diag        
         bdz = self.get_basis_matrix(u,v,w,0,0,1)
-        dpdz = bdz.dot(self.control_points[:,3])*self.scaling[2]
+        dpdz = bdz.dot(self.control_points[:,3])*self.scaling[2]/self.Bbox_diag
         return dpdx, dpdy, dpdz
 
     def visualize(self, phi_cps=None, res=30):

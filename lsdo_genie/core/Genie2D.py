@@ -75,7 +75,7 @@ class Genie2D(BsplineSurface):
         self.domain = domain
 
         # Bounding box properties
-        dxy = np.diff(domain).flatten()
+        dxy = np.diff(domain).flatten()/self.Bbox_diag
         self.scaling = 1/dxy
         # Number of control points in each direction
         frac = dxy / np.max(dxy)
@@ -117,7 +117,7 @@ class Genie2D(BsplineSurface):
             print('Initial max distance: ',np.max(self.control_points[:,2]))
             print('Bspline order: ',self.order,'\n')
 
-    def solve_energy_minimization(self, Lp:float=1., Ln:float=1., Lr:float=1e-3):
+    def solve_energy_minimization(self, Lp:float=1., Ln:float=1., Lr:float=1e-3, maxiter=None):
         '''
         Solve the energy minimization problem
 
@@ -151,8 +151,9 @@ class Genie2D(BsplineSurface):
         b  = Ln/self.num_surf_pts * (nx@Ax + ny@Ay)
 
         t1 = time.perf_counter()
-        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,2])
+        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,2]/self.Bbox_diag,maxiter=maxiter)
         self.timetosolve = time.perf_counter() - t1
+        phi_solved = phi_solved*self.Bbox_diag
         if info != 0:
             raise Exception(f"Conjugate gradient solver terminated with bad exit code: {info}")
 
@@ -392,7 +393,7 @@ class Genie2D(BsplineSurface):
         '''
         u,v = self.spatial_to_parametric(pts)
         bdx = self.get_basis_matrix(u,v,1,0)
-        dpdx = bdx.dot(self.control_points[:,2])*self.scaling[0]
+        dpdx = bdx.dot(self.control_points[:,2])*self.scaling[0]/self.Bbox_diag
         bdy = self.get_basis_matrix(u,v,0,1)
-        dpdy = bdy.dot(self.control_points[:,2])*self.scaling[1]
+        dpdy = bdy.dot(self.control_points[:,2])*self.scaling[1]/self.Bbox_diag
         return dpdx, dpdy
