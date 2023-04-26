@@ -151,7 +151,13 @@ class Genie2D(BsplineSurface):
         b  = Ln/self.num_surf_pts * (nx@Ax + ny@Ay)
 
         t1 = time.perf_counter()
-        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,2]/self.Bbox_diag,maxiter=maxiter)
+        phi_solved, info = sps.linalg.bicgstab(
+            A,
+            -b.flatten(),
+            x0=self.control_points[:,2]/self.Bbox_diag,
+            maxiter=maxiter,
+            atol=1e-6,
+        )
         self.timetosolve = time.perf_counter() - t1
         phi_solved = phi_solved*self.Bbox_diag
         if info != 0:

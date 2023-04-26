@@ -167,7 +167,13 @@ class Genie3D(BsplineVolume):
         b  = Ln/self.num_surface_points * (nx@Ax + ny@Ay + nz@Az)
 
         t1 = time.perf_counter()
-        phi_solved, info = sps.linalg.cg(A,-b.flatten(),x0=self.control_points[:,3]/self.Bbox_diag,maxiter=maxiter)
+        phi_solved, info = sps.linalg.bicgstab(
+            A,
+            -b.flatten(),
+            x0=self.control_points[:,3]/self.Bbox_diag,
+            maxiter=maxiter,
+            atol=1e-6
+        )
         self.timetosolve = time.perf_counter() - t1
         phi_solved = phi_solved*self.Bbox_diag
         if info != 0:
