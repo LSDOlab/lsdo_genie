@@ -5,9 +5,9 @@ For geometric shapes in 2D, a B-spline surface is used, and in 3D, a B-spline vo
 A B-spline volume is given by
 
 $$
-\phi(x,y,z) = \sum_{i,j,k=1}^{n_i,n_j,n_k} \mathbf{C}_\phi \mathbf{B}_{i,d}(x) \mathbf{B}_{j,d}(y) \mathbf{B}_{k,d}(z),
+\phi(x,y,z) = \sum_{i,j,k=1}^{n_i,n_j,n_k} \mathbf{C}_{i,j,k}^{(\phi)} \mathbf{B}_{i,d}(x) \mathbf{B}_{j,d}(y) \mathbf{B}_{k,d}(z),
 $$
-where $\mathbf{C}_\phi$ is the value of the control points and $\mathbf{B}_{i,d}(x)$ is the basis function defined
+where $\mathbf{C}_{i,j,k}^{(\phi)}$ is the value of the control points and $\mathbf{B}_{i,d}(x)$ is the basis function defined
 by the Cox de-Boor algorithm in the $i$ direction with $d$ polynomial degree.
 $N_c$ is the total number of control points, which is built up by uniformly distributed control points along the $i,j,k$ directions with
 the number of control points $n_i,n_j,n_k$ in each direction, respectively.
@@ -41,7 +41,7 @@ $$
 \begin{align}
     \begin{array}{r l}
         \text{minimize}            & f = \mathcal{E}_p + \lambda_n \mathcal{E}_n + \lambda_r \mathcal{E}_r\\
-        \text{with respect to}     & \mathbf{C}_\phi
+        \text{with respect to}     & \mathbf{C}_{i,j,k}^{(\phi)}
     \end{array}
 \end{align}
 $$
@@ -51,14 +51,15 @@ It's form may be reduced to the following.
 
 $$
 \begin{array}{r l}
-    \text{minimize}            & \frac{1}{2} \mathbf{C}_\phi^T \tilde{A} \mathbf{C}_\phi + \tilde{b}^T \mathbf{C}_\phi
+    \text{minimize}            & \frac{1}{2} \mathbf{c}_\phi^T \tilde{A} \mathbf{c}_\phi + \tilde{b}^T \mathbf{c}_\phi\\
+    \text{with respect to}     & \mathbf{c}_\phi
 \end{array}
 $$
 
 It is then clear to see that the exact solution reduces to a linear system of equations in the form
 
 $$
-\tilde{A} \mathbf{C}_\phi = -\tilde{b},
+\tilde{A} \mathbf{c}_\phi = -\tilde{b},
 $$
 where $\tilde{A}\in\mathbb{R}^{N_c,N_c}$ is a sparse, symmetric, positive definite matrix. 
 An example of its sparsity is shown below
