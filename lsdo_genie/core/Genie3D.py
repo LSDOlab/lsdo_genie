@@ -108,7 +108,7 @@ class Genie3D(BsplineVolume):
         super().__init__('Bspline',order,order,order,kv_u,kv_v,kv_w,num_cps)
 
         # Surface points for data terms (Ep, En)
-        self.u['surf'], self.v['surf'], self.w['surf'] = self.spatial_to_parametric(self.surface_points)
+        # self.u['surf'], self.v['surf'], self.w['surf'] = self.spatial_to_parametric(self.surface_points)
         # Quadrature points for regulation term (Er)
         temp_u, temp_v, temp_w = self.spatial_to_parametric(self.control_points[:,0:3])
         mask = np.argwhere(
@@ -296,7 +296,11 @@ class Genie3D(BsplineVolume):
         basis : sps.csc_matrix(N,Ncp)
             The basis matrix that can be multiplied with the control points to get (N,) output values
         '''
-        basis = self.get_basis_matrix(self.u[loc],self.v[loc],self.w[loc],du,dv,dw)
+        if loc=='surf':
+            u, v, w = self.spatial_to_parametric(self.surface_points)
+        else:
+            u, v, w = self.u[loc], self.v[loc], self.w[loc]
+        basis = self.get_basis_matrix(u,v,w,du,dv,dw)
         return basis
 
     def compute_phi(self,pts):

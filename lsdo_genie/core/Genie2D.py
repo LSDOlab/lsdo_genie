@@ -96,9 +96,9 @@ class Genie2D(BsplineSurface):
         kv_v = standard_uniform_knot_vector(num_cps[1], order)
         # Define Bspline Volume object
         super().__init__('Bspline',order,order,kv_u,kv_v,num_cps)
-        
+
         # Surface points for data terms (Ep, En)
-        self.u['surf'], self.v['surf'] = self.spatial_to_parametric(self.surface_points)
+        # self.u['surf'], self.v['surf'] = self.spatial_to_parametric(self.surface_points)
         # Quadrature points for regulation term (Er)
         temp_u, temp_v = self.spatial_to_parametric(self.control_points[:,0:2])
         mask = np.argwhere(
@@ -356,7 +356,11 @@ class Genie2D(BsplineSurface):
         basis : sps.csc_matrix(N,Ncp)
             The basis matrix that can be multiplied with the control points to get (N,) output values
         '''
-        basis = self.get_basis_matrix(self.u[loc],self.v[loc],du,dv)
+        if loc=='surf':
+            u, v = self.spatial_to_parametric(self.surface_points)
+        else:
+            u, v = self.u[loc], self.v[loc]
+        basis = self.get_basis_matrix(u,v,du,dv)
         return basis
 
     def compute_phi(self,pts:np.ndarray):
