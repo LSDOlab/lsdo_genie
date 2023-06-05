@@ -2,7 +2,7 @@ import numpy as np
 import lsdo_test as lt
 
 ##test
-def standard_uniform_check():
+def test_standard_uniform():
     from lsdo_genie.bsplines.knot_vectors import standard_uniform_knot_vector
     num_cps = 5
     order = 4

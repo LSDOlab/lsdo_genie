@@ -34,18 +34,3 @@ git push
 5. Create pull request on GitHub with descriptions for changes.
  - Fill out pull request template
  - Assign reviewers (repo admin(s)?)
-
-## Pull Request Review
-When a pull request is submitted, reviews should be done in a timely manner (it will be time-consuming to remember what the code does if the code takes a week to be reviewed)
-
-When reviewing a pull request, approve when:
- - Requirements above are met
-   - Make sure code is commented cleanly 
- - GitHub actions tests pass
- - The code runs locally on your computer (run cases to try and break their code)
-
-When rejecting a pull request, write a precise description of what needs to improved/fixed in the comment section.
-
-## Tests
-For test driven development, create tests before code implementation.
-Templates from `tests/template.py` can be used. Create tests in `tests` directory and write test functions with `test_` prefix in test files.
