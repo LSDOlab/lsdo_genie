@@ -6,7 +6,6 @@ This section provides a list of examples for you to reference for reference and 
 :maxdepth: 2
 :caption: List of examples
 :titlesonly:
-:numbered:
 :includehidden:
 
 _temp/examples/2D_examples/ex_circles

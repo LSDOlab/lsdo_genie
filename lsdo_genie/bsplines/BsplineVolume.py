@@ -5,7 +5,7 @@ from lsdo_genie.bsplines.cython.basis_matrix_volume_py import get_basis_volume_m
 
 class BsplineVolume:
     '''
-    Base class for B-spline Curves
+    Base class for B-spline Volumes
 
     Attributes
     ----------

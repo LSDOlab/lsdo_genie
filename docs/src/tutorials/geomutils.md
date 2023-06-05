@@ -6,5 +6,5 @@ The following tutorials guide you through using `lsdo_genie`'s included utilitie
 ```{toctree}
 :maxdepth: 1
 
-../_temp/tutorials/utils/normalapprox_tutorial
+../_temp/tutorials/utils/tu_normalapprox
 ```
