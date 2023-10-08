@@ -46,8 +46,11 @@ class BsplineCurve:
         row_indices = np.zeros(len(data), np.int32)
         col_indices = np.zeros(len(data), np.int32)
 
+        u_i_starts = np.floor(u_vec*(self.shape_u - self.order_u + 1)).astype(int)
+
         get_basis_curve_matrix(
             self.order_u, self.shape_u, du, u_vec, self.knots_u, 
+            u_i_starts,
             len(u_vec), data, row_indices, col_indices
             )
             

@@ -68,10 +68,17 @@ class BsplineVolume:
         row_indices = np.zeros(len(data), np.int32)
         col_indices = np.zeros(len(data), np.int32)
 
+        u_i_starts = np.floor(u_vec*(self.shape_u - self.order_u + 1)).astype(int)
+        v_i_starts = np.floor(v_vec*(self.shape_v - self.order_v + 1)).astype(int)
+        w_i_starts = np.floor(w_vec*(self.shape_w - self.order_w + 1)).astype(int)
+
         get_basis_volume_matrix(
             self.order_u, self.shape_u, du, u_vec, self.knots_u, 
+            u_i_starts,
             self.order_v, self.shape_v, dv, v_vec, self.knots_v,
+            v_i_starts,
             self.order_w, self.shape_w, dw, w_vec, self.knots_w,
+            w_i_starts,
             len(u_vec), data, row_indices, col_indices
             )
             

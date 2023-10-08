@@ -4,11 +4,12 @@ from lsdo_genie.bsplines.cython.basis0 cimport get_basis0
 from lsdo_genie.bsplines.cython.basis1 cimport get_basis1
 from lsdo_genie.bsplines.cython.basis2 cimport get_basis2
 
-ctypedef int (*get_basis_func)(int order, int num_control_points, double u, double* knot_vector, double* basis)
+ctypedef int (*get_basis_func)(int order, int num_control_points, double u, int u_i_starts, double* knot_vector, double* basis)
 
 
 cdef get_basis_curve_matrix(
     int order, int num_control_points, int u_der, double* u_vec, double* knot_vector,
+    int* u_i_starts,
     int num_points, double* data, int* row_indices, int* col_indices,
 ):
     cdef int i_pt, i_order, i_start, i_nz
@@ -26,7 +27,7 @@ cdef get_basis_curve_matrix(
 
     i_nz = 0
     for i_pt in range(num_points):
-        i_start = get_basis(order, num_control_points, u_vec[i_pt], knot_vector, basis)
+        i_start = get_basis(order, num_control_points, u_vec[i_pt], u_i_starts[i_pt], knot_vector, basis)
 
         for i_order in range(order):
             data[i_nz] = basis[i_order]
