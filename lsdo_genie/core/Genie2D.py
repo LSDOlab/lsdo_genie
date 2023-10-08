@@ -177,6 +177,10 @@ class Genie2D(BsplineSurface):
         Compute error values and print to terminal
         '''
         phi = self.compute_phi(self.surface_points)
+        print('Absolute surface error: \n',
+                f'  Bbox_diag: {self.Bbox_diag:1.3e} units\n',
+                f'  Max: {np.max(abs(phi)):1.3e} units\n',
+                f'  RMS: {np.sqrt(np.sum(phi**2)/len(phi)):1.3e} units')
         phi = phi/self.Bbox_diag
         print('Relative surface error: \n',
                 f'  Max: {np.max(abs(phi)):1.3e}\n',
@@ -202,27 +206,11 @@ class Genie2D(BsplineSurface):
         y = self.domain[1]
         dataset = KDTree(self.surface_points)
 
-        sns.set()
-        plt.figure()
-        ax = plt.axes()
-        u = np.einsum('i,j->ij', np.linspace(0,1,res), np.ones(res)).flatten()
-        v = np.einsum('i,j->ij', np.ones(res), np.linspace(0,1,res)).flatten()
-        b = self.get_basis_matrix(u, v, 0, 0)
-        xx = b.dot(self.control_points[:,0]).reshape(res,res)
-        yy = b.dot(self.control_points[:,1]).reshape(res,res)
-        phi = b.dot(phi_cps).reshape(res,res)
-        ax.contour(xx,yy,phi,levels=[-0.1*self.Bbox_diag,-0.05*self.Bbox_diag,0,0.05*self.Bbox_diag,0.1*self.Bbox_diag],colors=['red','orange','green','blue','purple'])
-        ax.plot(self.surface_points[:,0],self.surface_points[:,1],'k.',label='surface points')
-        ax.set_xlabel('x')
-        ax.set_ylabel('y')
-        ax.set_title(f'Isocontours [0,+/-0.05,+/-0.1] BBox Diagonal: {self.Bbox_diag:.3f}')
-        ax.legend(loc='upper right')
-        ax.set_xticks([x[0],np.sum(x)/2,x[1]])
-        ax.set_yticks([y[0],np.sum(y)/2,y[1]])
-        ax.axis('equal')
+        self.visualize_isocontours(res=res)
 
         plt.figure()
         ax = plt.axes(projection='3d')
+        sns.despine()
         ax.plot(self.control_points[:,0],self.control_points[:,1],phi_cps,'k.')
         uu,vv = np.meshgrid(np.linspace(0,1,res),
                             np.linspace(0,1,res))
@@ -247,11 +235,11 @@ class Genie2D(BsplineSurface):
         ax.set_ylim(lim)
         ax.set_zlim(phi_cps.min(),phi_cps.max())
 
-
         k=10
         rho=10
         plt.figure()
         ax = plt.axes()
+        sns.despine()
         ones = np.ones(res)
         diag = np.linspace(0,1,res)
         basis = self.get_basis_matrix(diag, 0.5*ones, 0, 0)
@@ -272,8 +260,38 @@ class Genie2D(BsplineSurface):
         ax.set_xlabel('Normalized Location')
         ax.set_ylabel('Phi')
         ax.set_title('Phi along 1D slices')
-        ax.legend()
+        ax.legend(loc='upper left', bbox_to_anchor=(1,1))
         plt.show()
+
+    def visualize_isocontours(self, res=300, contours=[-0.1,-0.05,0,0.05,0.1], show=False, title=True):
+        x = self.domain[0]
+        y = self.domain[1]
+        levels=[]
+        for c in contours:
+            levels.append(c*self.Bbox_diag)
+        all_colors = ['red','orange','green','blue','purple']
+        sns.set_style('ticks')
+        plt.figure()
+        ax = plt.axes()
+        sns.despine()
+        u = np.einsum('i,j->ij', np.linspace(0,1,res), np.ones(res)).flatten()
+        v = np.einsum('i,j->ij', np.ones(res), np.linspace(0,1,res)).flatten()
+        b = self.get_basis_matrix(u, v, 0, 0)
+        xx = b.dot(self.control_points[:,0]).reshape(res,res)
+        yy = b.dot(self.control_points[:,1]).reshape(res,res)
+        phi = b.dot(self.control_points[:,2]).reshape(res,res)
+        ax.contour(xx,yy,phi,levels=levels,colors=all_colors[0:len(contours)])
+        ax.plot(self.surface_points[:,0],self.surface_points[:,1],'k.',label='surface points')
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+        if title:
+            ax.set_title(f'Isocontours [0,+/-0.05,+/-0.1] BBox Diagonal: {self.Bbox_diag:.3f}')
+        ax.legend(loc='upper left', bbox_to_anchor=(1,1))
+        ax.set_xticks([x[0],np.sum(x)/2,x[1]])
+        ax.set_yticks([y[0],np.sum(y)/2,y[1]])
+        ax.axis('equal')
+        if show:
+            plt.show()
 
     def spatial_to_parametric(self,pts:np.ndarray):
         '''
