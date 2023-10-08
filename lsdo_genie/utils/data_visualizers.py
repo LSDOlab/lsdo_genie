@@ -34,8 +34,10 @@ def visualize_2Dptcloud(points:np.ndarray, normals:np.ndarray, show_normals:bool
             else: 
                 plt.arrow(x, y, nx*normal_length, ny*normal_length, color='b', head_width=.2)
     plt.title(title)
-    plt.legend()
+    plt.legend(loc='upper right')
     plt.axis('equal')
+    plt.xlabel("x")
+    plt.ylabel("y")
     sns.despine()
     plt.show()
 

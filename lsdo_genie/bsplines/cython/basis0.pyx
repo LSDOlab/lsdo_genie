@@ -1,13 +1,11 @@
-cdef int get_basis0(int order, int num_control_points, double u, double* knot_vector, double* basis0):
+cdef int get_basis0(int order, int num_control_points, double u, int i_start, double* knot_vector, double* basis0):
     cdef int i, j1, j2, n
 
-    cdef int i_start = -1
-
     # Find the knot interval
-
-    for i in range(order - 1, num_control_points):
-        if (knot_vector[i] <= u) and (u < knot_vector[i + 1]):
-            i_start = i - order + 1
+    # cdef int i_start = -1
+    # for i in range(order - 1, num_control_points):
+    #     if (knot_vector[i] <= u) and (u < knot_vector[i + 1]):
+    #         i_start = i - order + 1
 
     # Initialize the basis0 to (0., ..., 0., 1.)
     for i in range(order - 1):

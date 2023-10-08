@@ -1,19 +1,17 @@
 from libc.stdlib cimport malloc, free
 
-cdef int get_basis2(int order, int num_control_points, double u, double* knot_vector, double* basis2):
+cdef int get_basis2(int order, int num_control_points, double u, int i_start, double* knot_vector, double* basis2):
     cdef int i, j1, j2, l, n
     cdef double den, b0_a, b0_b, b1_a, b1_b, b2_a, b2_b
 
     cdef double *basis0 = <double *> malloc(order * sizeof(double))
     cdef double *basis1 = <double *> malloc(order * sizeof(double))
 
-    cdef int i_start = -1
-
-    # Find the knot interval
-
-    for i in range(order - 1, num_control_points):
-        if (knot_vector[i] <= u) and (u < knot_vector[i + 1]):
-            i_start = i - order + 1
+    # General search for knot interval start is no longer necessary due to standard uniform knot vectors
+    # cdef int i_start = -1
+    # for i in range(order - 1, num_control_points):
+    #     if (knot_vector[i] <= u) and (u < knot_vector[i + 1]):
+    #         i_start = i - order + 1
 
     # Initialize the basis0 to (0., ..., 0., 1.)
     for i in range(order - 1):
